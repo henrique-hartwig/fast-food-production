@@ -34,7 +34,7 @@ resource "aws_subnet" "private_subnet_fast_food" {
   }
 }
 
-resource "aws_internet_gateway" "igw" {
+resource "aws_internet_gateway" "igw_fast_food" {
   vpc_id = aws_vpc.vpc_fast_food.id
 
   tags = {
@@ -43,12 +43,12 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route_table" "public" {
+resource "aws_route_table" "public_route_table_fast_food" {
   vpc_id = aws_vpc.vpc_fast_food.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
+    gateway_id = aws_internet_gateway.igw_fast_food.id
   }
 
   tags = {
@@ -57,10 +57,10 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "public" {
+resource "aws_route_table_association" "public_route_table_association_fast_food" {
   count          = length(var.public_subnet_cidrs)
   subnet_id      = aws_subnet.public_subnet_fast_food[count.index].id
-  route_table_id = aws_route_table.public.id
+  route_table_id = aws_route_table.public_route_table_fast_food.id
 }
 
 resource "aws_eip" "nat" {
@@ -73,7 +73,7 @@ resource "aws_eip" "nat" {
   }
 }
 
-resource "aws_nat_gateway" "nat" {
+resource "aws_nat_gateway" "nat_gateway_fast_food" {
   count         = length(var.private_subnet_cidrs) > 0 ? 1 : 0
   allocation_id = aws_eip.nat[0].id
   subnet_id     = aws_subnet.public_subnet_fast_food[0].id
@@ -84,13 +84,13 @@ resource "aws_nat_gateway" "nat" {
   }
 }
 
-resource "aws_route_table" "private" {
+resource "aws_route_table" "private_route_table_fast_food" {
   count  = length(var.private_subnet_cidrs) > 0 ? 1 : 0
   vpc_id = aws_vpc.vpc_fast_food.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat[0].id
+    nat_gateway_id = aws_nat_gateway.nat_gateway_fast_food[0].id
   }
 
   tags = {
@@ -99,13 +99,13 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route_table_association" "private" {
+resource "aws_route_table_association" "private_route_table_association_fast_food" {
   count          = length(var.private_subnet_cidrs)
   subnet_id      = aws_subnet.private_subnet_fast_food[count.index].id
-  route_table_id = aws_route_table.private[0].id
+  route_table_id = aws_route_table.private_route_table_fast_food[0].id
 }
 
-resource "aws_flow_log" "vpc_flow_log" {
+resource "aws_flow_log" "vpc_flow_log_fast_food" {
   iam_role_arn    = "arn:aws:iam::992382498858:role/LabRole"
   log_destination = aws_cloudwatch_log_group.vpc_flow_log.arn
   traffic_type    = "ALL"
@@ -117,7 +117,7 @@ resource "aws_flow_log" "vpc_flow_log" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "vpc_flow_log" {
+resource "aws_cloudwatch_log_group" "vpc_flow_log_fast_food" {
   name              = "/aws/vpc/flow-log-${var.environment}"
   retention_in_days = 30
   

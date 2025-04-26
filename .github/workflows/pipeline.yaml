@@ -12,6 +12,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  TERRAFORM_DIR: terraform
 
 jobs:
   terraform:
@@ -40,6 +41,7 @@ jobs:
 
     - name: Terraform Init
       id: init
+      working-directory: ${{ env.TERRAFORM_DIR }}
       run: |
         cat <<EOF > backend.conf
         bucket="fastfood-orders-terraform-state"
@@ -51,11 +53,13 @@ jobs:
 
     - name: Terraform Format
       id: fmt
+      working-directory: ${{ env.TERRAFORM_DIR }}
       run: terraform fmt -check
       continue-on-error: true
 
     - name: Terraform Plan
       id: plan
+      working-directory: ${{ env.TERRAFORM_DIR }}
       run: terraform plan -no-color -input=false -out=tfplan
       continue-on-error: true
 
@@ -91,4 +95,5 @@ jobs:
 
     - name: Terraform Apply
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      working-directory: ${{ env.TERRAFORM_DIR }}
       run: terraform apply -auto-approve tfplan

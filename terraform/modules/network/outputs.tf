@@ -14,8 +14,8 @@ output "private_subnet_ids" {
 }
 
 output "nat_gateway_ids" {
-  description = "IDs of the NAT Gateways"
-  value       = aws_nat_gateway.nat_gateway_fast_food.id
+  description = "NAT Gateways IDs"
+  value       = aws_nat_gateway.nat_gateway_fast_food[*].id
 }
 
 output "internet_gateway_id" {

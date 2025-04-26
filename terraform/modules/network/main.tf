@@ -74,23 +74,23 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "nat_gateway_fast_food" {
-  count         = length(var.private_subnet_cidrs) > 0 ? 1 : 0
-  allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.public_subnet_fast_food[0].id
+  count         = length(var.public_subnet_cidrs)
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public_subnet_fast_food[count.index].id
 
   tags = {
-    Name        = "nat-gateway-${var.environment}"
+    Name        = "nat-gateway-${count.index + 1}"
     Environment = var.environment
   }
 }
 
 resource "aws_route_table" "private_route_table_fast_food" {
-  count  = length(var.private_subnet_cidrs) > 0 ? 1 : 0
+  count  = length(var.private_subnet_cidrs)
   vpc_id = aws_vpc.vpc_fast_food.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway_fast_food.id
+    nat_gateway_id = aws_nat_gateway.nat_gateway_fast_food[count.index].id
   }
 
   tags = {
@@ -102,7 +102,7 @@ resource "aws_route_table" "private_route_table_fast_food" {
 resource "aws_route_table_association" "private_route_table_association_fast_food" {
   count          = length(var.private_subnet_cidrs)
   subnet_id      = aws_subnet.private_subnet_fast_food[count.index].id
-  route_table_id = aws_route_table.private_route_table_fast_food[0].id
+  route_table_id = aws_route_table.private_route_table_fast_food[count.index].id
 }
 
 resource "aws_flow_log" "vpc_flow_log_fast_food" {

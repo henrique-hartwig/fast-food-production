@@ -16,6 +16,7 @@ module "database" {
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password
+  db_port           = var.db_port
   vpc_id            = module.network.vpc_id
   subnet_ids        = module.network.private_subnet_ids
 }
@@ -26,7 +27,6 @@ module "product_category" {
   environment        = var.environment
   vpc_id             = module.network.vpc_id
   subnet_ids         = module.network.private_subnet_ids
-  db_secret_arn      = module.database.db_secret_arn
   lambda_memory_size = var.lambda_memory_size
   lambda_timeout     = var.lambda_timeout
   lambda_handler     = "src/application/handlers/productCategory/index.handler"

@@ -43,6 +43,7 @@ resource "aws_db_instance" "db_fast_food_orders" {
   storage_type           = "gp2"
   db_name                = var.db_name
   username               = var.db_username
+  port                   = var.db_port
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.subnet_group_fast_food_orders.name
   vpc_security_group_ids = [aws_security_group.security_group_fast_food_orders.id]
@@ -57,25 +58,3 @@ resource "aws_db_instance" "db_fast_food_orders" {
     Environment = var.environment
   }
 }
-
-resource "aws_secretsmanager_secret" "db_secret_fast_food_orders" {
-  name        = "fast-food-orders-db-secret-${var.environment}"
-  description = "Credentials for Fast Food Orders database"
-  
-  tags = {
-    Name        = "Fast Food Orders DB Secret"
-    Environment = var.environment
-  }
-}
-
-resource "aws_secretsmanager_secret_version" "secret_fast_food_orders" {
-  secret_id = aws_secretsmanager_secret.db_secret_fast_food_orders.id
-  secret_string = jsonencode({
-    username = var.db_username
-    password = var.db_password
-    engine   = "postgres"
-    host     = aws_db_instance.db_fast_food_orders.address
-    port     = 5432
-    dbname   = var.db_name
-  })
-} 

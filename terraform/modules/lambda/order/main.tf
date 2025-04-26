@@ -25,29 +25,6 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_policy" "secrets_access" {
-  name        = "orders-secrets-access-${var.environment}"
-  description = "Permite acesso ao Secret Manager para o microserviço de Orders"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "secretsmanager:GetSecretValue"
-        ]
-        Effect   = "Allow"
-        Resource = var.db_secret_arn
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_secrets_access" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.secrets_access.arn
-}
-
 resource "aws_security_group" "lambda_sg" {
   name        = "orders-lambda-sg-${var.environment}"
   description = "Security group para as funções Lambda do microserviço de Orders"
@@ -117,7 +94,6 @@ resource "aws_lambda_function" "orders_functions" {
   environment {
     variables = {
       NODE_ENV     = var.environment
-      DB_SECRET_ARN = var.db_secret_arn
     }
   }
 

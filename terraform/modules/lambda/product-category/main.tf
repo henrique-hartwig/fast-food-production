@@ -27,24 +27,6 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_policy" "secrets_access" {
-  name        = "${var.lambda_name}-secrets-access-${var.environment}"
-  description = "Allows access to the Secret Manager for the ${var.lambda_name} function"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "secretsmanager:GetSecretValue"
-        ]
-        Effect   = "Allow"
-        Resource = var.db_secret_arn
-      }
-    ]
-  })
-}
-
 resource "aws_iam_role_policy_attachment" "lambda_secrets_access" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.secrets_access.arn
@@ -105,7 +87,6 @@ resource "aws_lambda_function" "product_category_functions" {
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  # O código será implantado pelo Serverless Framework
   filename         = "dummy.zip"
   source_code_hash = filebase64sha256("dummy.zip")
   
@@ -116,7 +97,6 @@ resource "aws_lambda_function" "product_category_functions" {
   environment {
     variables = {
       NODE_ENV     = var.environment
-      DB_SECRET_ARN = var.db_secret_arn
     }
   }
 

@@ -27,6 +27,11 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "db_port" {
+  type        = number
+  description = "Database port"
+}
+
 variable "vpc_id" {
   type        = string
   description = "VPC ID where the database will be deployed"

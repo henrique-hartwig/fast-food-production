@@ -10,11 +10,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "db_secret_arn" {
-  description = "ARN of the secret in Secrets Manager that contains the database credentials"
-  type        = string
-}
-
 variable "lambda_memory_size" {
   description = "Memory size for the Lambda functions (MB)"
   type        = number
@@ -55,6 +50,12 @@ variable "db_password" {
   description = "Password for the database"
   type        = string
   sensitive   = true
+}
+
+variable "db_port" {
+  description = "Port for the database"
+  type        = number
+  default     = 5432
 }
 
 variable "vpc_cidr" {

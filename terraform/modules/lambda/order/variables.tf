@@ -15,11 +15,6 @@ variable "lambda_timeout" {
   default     = 30
 }
 
-variable "db_secret_arn" {
-  description = "ARN of the secret with the database credentials"
-  type        = string
-}
-
 variable "vpc_id" {
   description = "ID of the VPC where the Lambda functions will be deployed"
   type        = string

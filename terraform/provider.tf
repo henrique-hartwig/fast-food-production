@@ -1,5 +1,9 @@
 provider "aws" {
   region = var.aws_region
+  
+  assume_role {
+    role_arn = "arn:aws:iam::aws:role/LabRole"
+  }
 
   default_tags {
     tags = {
@@ -24,5 +28,7 @@ terraform {
     bucket = "fastfood-orders-terraform-state"
     key    = "infra/state.tfstate"
     region = "us-east-1"
+    
+    role_arn = "arn:aws:iam::aws:role/LabRole"
   }
 }

@@ -3,4 +3,20 @@
 node_modules/
 .build/
 
+
+# Terraform
 terraform/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+*.tfvars
+
+# IDE
+.idea/
+.vscode/
+
+# Outros
+*.log
+
+# Env
+.env

@@ -103,7 +103,7 @@ resource "aws_lambda_function" "orders_functions" {
 
   function_name = "orders-${each.value.name}-${var.environment}"
   description   = each.value.description
-  role          = aws_iam_role.lambda_role.arn
+  role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
   # O código será implantado pelo Serverless Framework

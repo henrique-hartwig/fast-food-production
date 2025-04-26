@@ -103,4 +103,26 @@ resource "aws_route_table_association" "private" {
   count          = length(var.private_subnet_cidrs)
   subnet_id      = aws_subnet.private_subnet_fast_food[count.index].id
   route_table_id = aws_route_table.private[0].id
+}
+
+resource "aws_flow_log" "vpc_flow_log" {
+  iam_role_arn    = "arn:aws:iam::992382498858:role/LabRole"
+  log_destination = aws_cloudwatch_log_group.vpc_flow_log.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.vpc_fast_food.id
+  
+  tags = {
+    Name        = "vpc-flow-log-${var.environment}"
+    Environment = var.environment
+  }
+}
+
+resource "aws_cloudwatch_log_group" "vpc_flow_log" {
+  name              = "/aws/vpc/flow-log-${var.environment}"
+  retention_in_days = 30
+  
+  tags = {
+    Name        = "vpc-flow-log-group-${var.environment}"
+    Environment = var.environment
+  }
 } 

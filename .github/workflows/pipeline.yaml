@@ -13,7 +13,6 @@ on:
 env:
   AWS_REGION: us-east-1
   TERRAFORM_DIR: terraform
-  AWS_ROLE_ARN: arn:aws:iam::aws:role/LabRole
 
 jobs:
   terraform:
@@ -34,8 +33,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ env.AWS_REGION }}
-        role-to-assume: ${{ env.AWS_ROLE_ARN }}
-        role-duration-seconds: 1200
 
     - name: Setup Terraform Variables
       run: |

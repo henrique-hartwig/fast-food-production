@@ -10,7 +10,9 @@ resource "aws_apigatewayv2_api" "api" {
     max_age       = 300
   }
   
-  tags = var.tags
+  tags = merge(var.tags, {
+    Environment = var.environment
+  })
 }
 
 resource "aws_apigatewayv2_stage" "default" {
@@ -29,18 +31,27 @@ resource "aws_apigatewayv2_stage" "default" {
       status         = "$context.status"
       protocol       = "$context.protocol"
       responseLength = "$context.responseLength"
-      integrationError = "$context.integrationErrorMessage"
+      integrationLatency = "$context.integrationLatency"
     })
+  }
+  
+  default_route_settings {
+    throttling_burst_limit = 100
+    throttling_rate_limit  = 50
+    data_trace_enabled     = true
+    logging_level          = "INFO"
   }
   
   tags = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "api_logs" {
-  name              = "/aws/apigateway/${var.api_name}-${var.environment}"
+  name              = "/aws/apigateway/${aws_apigatewayv2_api.api.name}"
   retention_in_days = 30
   
-  tags = var.tags
+  tags = merge(var.tags, {
+    Environment = var.environment
+  })
 }
 
 ################################################################################

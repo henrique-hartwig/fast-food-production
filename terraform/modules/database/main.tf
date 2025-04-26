@@ -49,6 +49,8 @@ resource "aws_db_instance" "db_fast_food_orders" {
   skip_final_snapshot    = true
   deletion_protection    = var.environment == "prod" ? true : false
   backup_retention_period = var.environment == "prod" ? 14 : 7
+  monitoring_role_arn    = "arn:aws:iam::992382498858:role/LabRole"
+  monitoring_interval    = 60
   
   tags = {
     Name        = "Fast Food Orders Database"

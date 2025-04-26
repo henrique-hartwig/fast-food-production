@@ -82,9 +82,8 @@ resource "aws_lambda_function" "orders_functions" {
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  # O código será implantado pelo Serverless Framework
-  filename         = "dummy.zip"
-  source_code_hash = filebase64sha256("dummy.zip")
+  filename         = "${path.module}/../../../dist/${each.value.name}.zip"
+  source_code_hash = filebase64sha256("${path.module}/../../../dist/${each.value.name}.zip")
   
   runtime          = "nodejs18.x"
   memory_size      = var.lambda_memory_size
@@ -108,8 +107,7 @@ resource "aws_lambda_function" "orders_functions" {
 
   lifecycle {
     ignore_changes = [
-      filename,
-      source_code_hash,
+      last_modified
     ]
   }
 } 

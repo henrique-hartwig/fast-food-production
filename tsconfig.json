@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": ".build",
-    "rootDir": "./",
+    "rootDir": "./src",
     "sourceMap": true,
     "resolveJsonModule": true
   },

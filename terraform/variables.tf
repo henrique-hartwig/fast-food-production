@@ -10,16 +10,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "vpc_id" {
-  description = "ID of the VPC where the resources will be deployed"
-  type        = string
-}
-
-variable "subnet_ids" {
-  description = "IDs of the subnets where the resources will be deployed"
-  type        = list(string)
-}
-
 variable "db_secret_arn" {
   description = "ARN of the secret in Secrets Manager that contains the database credentials"
   type        = string

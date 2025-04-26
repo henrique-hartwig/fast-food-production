@@ -13,7 +13,7 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.ts\"",
     "build:lambda": "rm -rf .build && tsc && cp -r node_modules .build/node_modules",
-    "package:lambda": "cd .build && find . -name '*.js' -exec dirname {} \\; | xargs -I{} sh -c 'mkdir -p ../dist/{} && zip -jr ../dist/{}.zip {}'",
+    "package:lambda": "cd .build && find src/application/handlers -mindepth 2 -maxdepth 2 -type d -exec sh -c 'd={}; mkdir -p ../dist/${d#src/application/handlers/} && zip -jr ../dist/${d#src/application/handlers/}.zip $d' \\;",
     "deploy:infra": "npm run build:lambda && npm run package:lambda && terraform -chdir=terraform apply"
   },
   "dependencies": {

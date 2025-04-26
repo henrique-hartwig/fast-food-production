@@ -64,23 +64,21 @@ resource "aws_route_table_association" "public_route_table_association_fast_food
 }
 
 resource "aws_eip" "nat" {
-  count = length(var.private_subnet_cidrs) > 0 ? 1 : 0
+  count = length(var.availability_zones)
   domain = "vpc"
 
   tags = {
-    Name        = "nat-eip-${var.environment}"
-    Environment = var.environment
+    Name = "nat-eip-${count.index + 1}"
   }
 }
 
 resource "aws_nat_gateway" "nat_gateway_fast_food" {
-  count         = length(var.public_subnet_cidrs)
+  count         = length(var.availability_zones)
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public_subnet_fast_food[count.index].id
 
   tags = {
-    Name        = "nat-gateway-${count.index + 1}"
-    Environment = var.environment
+    Name = "nat-gateway-${count.index + 1}"
   }
 }
 

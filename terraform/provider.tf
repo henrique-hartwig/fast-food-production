@@ -21,8 +21,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "fastfood-db-terraform-state"
-    key    = "orders/terraform.tfstate"
+    bucket = "fastfood-orders-terraform-state"
+    key    = "infra/state.tfstate"
     region = "us-east-1"
   }
 }

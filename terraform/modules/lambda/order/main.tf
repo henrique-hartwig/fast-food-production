@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
 
 resource "aws_security_group" "lambda_sg" {
   name        = "orders-lambda-sg-${var.environment}"
-  description = "Security group para as funções Lambda do microserviço de Orders"
+  description = "Security group for the Lambda functions of the Orders microservice"
   vpc_id      = var.vpc_id
 
   egress {
@@ -43,7 +43,6 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
-# Definição das funções Lambda
 locals {
   lambda_functions = {
     create_order = {

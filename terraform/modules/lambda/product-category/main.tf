@@ -27,11 +27,6 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_secrets_access" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.secrets_access.arn
-}
-
 resource "aws_security_group" "lambda_sg" {
   name        = "${var.lambda_name}-sg-${var.environment}"
   description = "Security group for the ${var.lambda_name} Lambda function"

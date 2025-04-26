@@ -21,7 +21,7 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
   
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_logs.arn
+    destination_arn = aws_cloudwatch_log_group.api_gateway_log_group_fast_food.arn
     format = jsonencode({
       requestId      = "$context.requestId"
       ip             = "$context.identity.sourceIp"
@@ -45,7 +45,7 @@ resource "aws_apigatewayv2_stage" "default" {
   tags = var.tags
 }
 
-resource "aws_cloudwatch_log_group" "api_logs" {
+resource "aws_cloudwatch_log_group" "api_gateway_log_group_fast_food" {
   name              = "/aws/apigateway/${aws_apigatewayv2_api.api.name}"
   retention_in_days = 30
   

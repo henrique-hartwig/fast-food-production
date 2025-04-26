@@ -90,7 +90,7 @@ resource "aws_route_table" "private_route_table_fast_food" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway_fast_food[0].id
+    nat_gateway_id = aws_nat_gateway.nat_gateway_fast_food.id
   }
 
   tags = {
@@ -107,7 +107,7 @@ resource "aws_route_table_association" "private_route_table_association_fast_foo
 
 resource "aws_flow_log" "vpc_flow_log_fast_food" {
   iam_role_arn    = "arn:aws:iam::992382498858:role/LabRole"
-  log_destination = aws_cloudwatch_log_group.vpc_flow_log.arn
+  log_destination = aws_cloudwatch_log_group.vpc_flow_log_fast_food.arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.vpc_fast_food.id
   

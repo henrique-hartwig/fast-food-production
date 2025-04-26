@@ -70,7 +70,6 @@ jobs:
         EOF
         
         terraform plan -no-color -input=false -out=tfplan
-      continue-on-error: true
 
     - name: Update Pull Request
       if: github.event_name == 'pull_request'

@@ -45,8 +45,8 @@ jobs:
         run: |
           echo "Arquivos em dist/:"
           ls -la dist/ || echo "dist/ não existe"
-          echo "Arquivos em build/:"
-          ls -la build/ || echo "build/ não existe"
+          echo "Arquivos em .build/:"
+          ls -la .build/ || echo "build/ não existe"
 
       - name: Uploadar artefatos de build
         uses: actions/upload-artifact@v4
@@ -54,7 +54,7 @@ jobs:
           name: lambda-build
           path: |
             dist/
-            build/
+            .build/
 
   terraform-validate:
     name: 'Terraform Plan & Validation'

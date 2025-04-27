@@ -1,6 +1,7 @@
 variable "environment" {
   description = "Deploy environment (dev, prod)"
   type        = string
+  default     = "dev"
 }
 
 variable "lambda_memory_size" {

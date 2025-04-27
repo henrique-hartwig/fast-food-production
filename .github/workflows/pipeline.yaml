@@ -14,8 +14,6 @@ env:
   AWS_REGION: us-east-1
   TERRAFORM_DIR: terraform
   DB_USERNAME: postgres
-  DB_PORT: 5432
-  DB_NAME: fast_food_orders
   DB_PASSWORD: postgres
 
 jobs:
@@ -42,16 +40,9 @@ jobs:
       env:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
-        echo "TF_VAR_db_name=${{ env.DB_NAME }}" >> $GITHUB_ENV
         echo "TF_VAR_db_username=${{ env.DB_USERNAME }}" >> $GITHUB_ENV
         echo "TF_VAR_db_password=$DB_PASSWORD" >> $GITHUB_ENV
-        echo "TF_VAR_db_port=${{ env.DB_PORT }}" >> $GITHUB_ENV
-
-        if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-          echo "TF_VAR_environment=prod" >> $GITHUB_ENV
-        else
-          echo "TF_VAR_environment=dev" >> $GITHUB_ENV
-        fi
+        echo "TF_VAR_environment=dev" >> $GITHUB_ENV
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

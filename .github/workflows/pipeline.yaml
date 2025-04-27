@@ -30,7 +30,16 @@ jobs:
         run: npm run build:lambda
 
       - name: Empacotar funções Lambda
-        run: npm run package:lambda
+        run: |
+          if [ -d .build/src/application/handlers ]; then
+            mkdir -p dist
+            cd .build
+            find src/application/handlers -mindepth 2 -maxdepth 2 -type d -exec sh -c 'd={}; zip -jr ../dist/${d#src/application/handlers/}.zip $d' \;
+          else
+            echo "Diretório .build/src/application/handlers não encontrado. Pulando empacotamento."
+            echo "Conteúdo do diretório .build:"
+            ls -la .build
+          fi
 
       - name: Uploadar artefatos de build
         uses: actions/upload-artifact@v4
@@ -177,7 +186,14 @@ jobs:
         run: npm run build:lambda
 
       - name: Empacotar funções Lambda
-        run: npm run package:lambda
+        run: |
+          if [ -d .build/src/application/handlers ]; then
+            mkdir -p dist
+            cd .build
+            find src/application/handlers -mindepth 2 -maxdepth 2 -type d -exec sh -c 'd={}; zip -jr ../dist/${d#src/application/handlers/}.zip $d' \;
+          else
+            echo "Diretório .build/src/application/handlers não encontrado. Pulando empacotamento."
+          fi
 
       - name: Terraform Apply
         working-directory: ${{ env.TERRAFORM_DIR }}

@@ -49,27 +49,27 @@ locals {
     create = {
       name        = "create-product-category"
       description = "Create a new product category"
-      handler     = "application/handlers/productCategory/createProductCategory.handler"
+      handler     = "application/handlers/productCategory/create.handler"
     },
     get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
-      handler     = "application/handlers/productCategory/getProductCategory.handler"
+      handler     = "application/handlers/productCategory/get.handler"
     },
     list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
-      handler     = "application/handlers/productCategory/listProductCategories.handler"
+      handler     = "application/handlers/productCategory/list.handler"
     },
     update = {
       name        = "update-product-category"
       description = "Update an existing product category"
-      handler     = "application/handlers/productCategory/updateProductCategory.handler"
+      handler     = "application/handlers/productCategory/update.handler"
     },
     delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
-      handler     = "application/handlers/productCategory/deleteProductCategory.handler"
+      handler     = "application/handlers/productCategory/delete.handler"
     }
   }
 }

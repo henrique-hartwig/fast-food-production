@@ -48,27 +48,32 @@ locals {
     create = {
       name        = "create-order"
       description = "Cria um novo pedido"
-      handler     = "src/application/handlers/createOrder.handler"
+      handler     = "application/handlers/order/create.handler"
     },
     get = {
       name        = "get-order"
       description = "Obtém um pedido pelo ID"
-      handler     = "src/application/handlers/getOrder.handler"
+      handler     = "application/handlers/order/get.handler"
     },
     list = {
       name        = "list-orders"
       description = "Lista pedidos com paginação"
-      handler     = "src/application/handlers/listOrders.handler"
+      handler     = "application/handlers/order/list.handler"
     },
     update = {
       name        = "update-order"
       description = "Atualiza um pedido existente"
-      handler     = "src/application/handlers/updateOrder.handler"
+      handler     = "application/handlers/order/update.handler"
+    },
+    update_status = {
+      name        = "update-order-status"
+      description = "Atualiza o status de um pedido existente"
+      handler     = "application/handlers/order/update_status.handler"
     },
     delete = {
       name        = "delete-order"
       description = "Remove um pedido"
-      handler     = "src/application/handlers/deleteOrder.handler"
+      handler     = "application/handlers/order/delete.handler"
     }
   }
 }
@@ -82,8 +87,8 @@ resource "aws_lambda_function" "orders_functions" {
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  filename         = "${path.module}/../../../dist/${each.value.name}.zip"
-  source_code_hash = filebase64sha256("${path.module}/../../../dist/${each.value.name}.zip")
+  filename         = "${path.module}/../../../dist/order/${each.value.name}.zip"
+  source_code_hash = filebase64sha256("${path.module}/../../../dist/order/${each.value.name}.zip")
   
   runtime          = "nodejs18.x"
   memory_size      = var.lambda_memory_size

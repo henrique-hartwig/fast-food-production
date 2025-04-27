@@ -31,12 +31,12 @@ jobs:
 
       - name: Empacotar funções Lambda
         run: |
-          if [ -d .build/src/application/handlers ]; then
+          if [ -d .build/application/handlers ]; then
             mkdir -p dist
             cd .build
-            find src/application/handlers -mindepth 2 -maxdepth 2 -type d -exec sh -c 'd={}; zip -jr ../dist/${d#src/application/handlers/}.zip $d' \;
+            find application/handlers -mindepth 2 -maxdepth 2 -type d -exec sh -c 'd={}; zip -jr ../dist/${d#application/handlers/}.zip $d' \;
           else
-            echo "Diretório .build/src/application/handlers não encontrado. Pulando empacotamento."
+            echo "Diretório .build/application/handlers não encontrado. Pulando empacotamento."
             echo "Conteúdo do diretório .build:"
             ls -la .build
           fi

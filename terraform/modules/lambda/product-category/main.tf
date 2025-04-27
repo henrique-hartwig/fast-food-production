@@ -46,27 +46,27 @@ resource "aws_security_group" "lambda_sg" {
 
 locals {
   lambda_functions = {
-    create_product_category = {
+    create = {
       name        = "create-product-category"
       description = "Create a new product category"
       handler     = "src/application/handlers/productCategory/createProductCategory.handler"
     },
-    get_product_category = {
+    get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
       handler     = "src/application/handlers/productCategory/getProductCategory.handler"
     },
-    list_product_categories = {
+    list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
       handler     = "src/application/handlers/productCategory/listProductCategories.handler"
     },
-    update_product_category = {
+    update = {
       name        = "update-product-category"
       description = "Update an existing product category"
       handler     = "src/application/handlers/productCategory/updateProductCategory.handler"
     },
-    delete_product_category = {
+    delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
       handler     = "src/application/handlers/productCategory/deleteProductCategory.handler"
@@ -109,6 +109,7 @@ resource "aws_lambda_function" "product_category_functions" {
     ignore_changes = [
       filename,
       source_code_hash,
+      last_modified
     ]
   }
 } 

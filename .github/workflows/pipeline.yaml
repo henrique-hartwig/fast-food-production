@@ -49,7 +49,12 @@ jobs:
 
     - name: Terraform Init
       working-directory: ${{ env.TERRAFORM_DIR }}
-      run: terraform init -backend-config=backend.conf
+      run: |
+        if [ -f backend.conf ]; then
+          terraform init -backend-config=backend.conf
+        else
+          terraform init
+        fi
 
     - name: Terraform Validate
       working-directory: ${{ env.TERRAFORM_DIR }}

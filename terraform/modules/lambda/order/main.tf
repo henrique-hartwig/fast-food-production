@@ -45,27 +45,27 @@ resource "aws_security_group" "lambda_sg" {
 
 locals {
   lambda_functions = {
-    create_order = {
+    create = {
       name        = "create-order"
       description = "Cria um novo pedido"
       handler     = "src/application/handlers/createOrder.handler"
     },
-    get_order = {
+    get = {
       name        = "get-order"
       description = "Obtém um pedido pelo ID"
       handler     = "src/application/handlers/getOrder.handler"
     },
-    list_orders = {
+    list = {
       name        = "list-orders"
       description = "Lista pedidos com paginação"
       handler     = "src/application/handlers/listOrders.handler"
     },
-    update_order = {
+    update = {
       name        = "update-order"
       description = "Atualiza um pedido existente"
       handler     = "src/application/handlers/updateOrder.handler"
     },
-    delete_order = {
+    delete = {
       name        = "delete-order"
       description = "Remove um pedido"
       handler     = "src/application/handlers/deleteOrder.handler"

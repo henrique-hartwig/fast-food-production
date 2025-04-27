@@ -34,6 +34,12 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Build and Package Lambda Functions
+      run: |
+        npm ci
+        npm run build:lambda
+        npm run package:lambda
+
     - name: Setup Terraform Variables
       env:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}

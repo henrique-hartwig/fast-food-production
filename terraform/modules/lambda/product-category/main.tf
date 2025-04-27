@@ -104,12 +104,4 @@ resource "aws_lambda_function" "product_category_functions" {
     Environment = var.environment
     Service     = "product-category"
   }
-
-  lifecycle {
-    ignore_changes = [
-      filename,
-      source_code_hash,
-      last_modified
-    ]
-  }
 } 

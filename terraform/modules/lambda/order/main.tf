@@ -104,10 +104,4 @@ resource "aws_lambda_function" "orders_functions" {
     Environment = var.environment
     Service     = "orders"
   }
-
-  lifecycle {
-    ignore_changes = [
-      last_modified
-    ]
-  }
 } 

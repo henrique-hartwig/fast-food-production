@@ -32,6 +32,9 @@ jobs:
       - name: Package Lambda functions
         run: npm run package:lambda
 
+      - name: List dist
+        run: ls -R dist
+
   terraform-validate:
     name: 'Terraform'
     runs-on: ubuntu-latest

@@ -22,7 +22,7 @@ variable "tags" {
 variable "product_category_lambdas" {
   description = "Information about the product category lambda functions"
   type = map(object({
-    name       = string
+    function_name       = string
     arn        = string
     invoke_arn = string
   }))
@@ -31,7 +31,7 @@ variable "product_category_lambdas" {
 variable "order_lambdas" {
   description = "Information about the order lambda functions"
   type = map(object({
-    name       = string
+    function_name       = string
     arn        = string
     invoke_arn = string
   }))

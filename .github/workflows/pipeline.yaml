@@ -45,7 +45,6 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
-      TERRAFORM_DIR: terraform
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
 
@@ -75,8 +74,8 @@ jobs:
           terraform_version: "1.7.0"
 
       - name: Terraform Init
-        working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
+          cd terraform
           if [ -f backend.conf ]; then
             terraform init -backend-config=backend.conf
           else
@@ -84,19 +83,16 @@ jobs:
           fi
 
       - name: Terraform Validate
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform validate
+        run: cd terraform && terraform validate
 
       - name: Terraform Format
         id: fmt
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform fmt -check
+        run: cd terraform && terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Plan
         id: plan
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform plan -no-color -input=false -out=tfplan
+        run: cd terraform && terraform plan -no-color -input=false -out=tfplan
         continue-on-error: true
 
       - name: Update Pull Request
@@ -152,5 +148,4 @@ jobs:
         run: npm run package:lambda
 
       - name: Terraform Apply
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform apply -auto-approve tfplan
+        run: cd terraform && terraform apply -auto-approve tfplan

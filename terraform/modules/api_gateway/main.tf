@@ -131,7 +131,7 @@ resource "aws_apigatewayv2_route" "delete_product_category" {
 resource "aws_lambda_permission" "create_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.product_category_lambdas.create.name
+  function_name = var.product_category_lambdas.create.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category"
 }
@@ -139,7 +139,7 @@ resource "aws_lambda_permission" "create_product_category" {
 resource "aws_lambda_permission" "list_product_categories" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.product_category_lambdas.list.name
+  function_name = var.product_category_lambdas.list.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-categories"
 }
@@ -147,7 +147,7 @@ resource "aws_lambda_permission" "list_product_categories" {
 resource "aws_lambda_permission" "get_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.product_category_lambdas.get.name
+  function_name = var.product_category_lambdas.get.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 }
@@ -155,7 +155,7 @@ resource "aws_lambda_permission" "get_product_category" {
 resource "aws_lambda_permission" "update_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.product_category_lambdas.update.name
+  function_name = var.product_category_lambdas.update.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 }
@@ -163,7 +163,7 @@ resource "aws_lambda_permission" "update_product_category" {
 resource "aws_lambda_permission" "delete_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.product_category_lambdas.delete.name
+  function_name = var.product_category_lambdas.delete.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 } 

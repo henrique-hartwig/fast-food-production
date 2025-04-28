@@ -19,3 +19,20 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+variable "product_category_lambdas" {
+  description = "Information about the product category lambda functions"
+  type = map(object({
+    name       = string
+    arn        = string
+    invoke_arn = string
+  }))
+}
+
+variable "order_lambdas" {
+  description = "Information about the order lambda functions"
+  type = map(object({
+    name       = string
+    arn        = string
+    invoke_arn = string
+  }))
+}

@@ -1,8 +1,3 @@
-locals {
-  product_category_lambdas = module.lambda.product_category_lambdas
-  order_lambdas = module.lambda.order_lambdas
-}
-
 resource "aws_apigatewayv2_api" "api" {
   name          = "${var.api_name}-${var.environment}"
   description   = var.api_description
@@ -66,7 +61,7 @@ resource "aws_cloudwatch_log_group" "api_gateway_log_group_fast_food" {
 resource "aws_apigatewayv2_integration" "create_product_category" {
   api_id             = aws_apigatewayv2_api.api.id
   integration_type   = "AWS_PROXY"
-  integration_uri    = local.product_category_lambdas.create.invoke_arn
+  integration_uri    = var.product_category_lambdas.create.invoke_arn
   integration_method = "POST"
   payload_format_version = "2.0"
 }
@@ -80,7 +75,7 @@ resource "aws_apigatewayv2_route" "create_product_category" {
 resource "aws_apigatewayv2_integration" "list_product_categories" {
   api_id             = aws_apigatewayv2_api.api.id
   integration_type   = "AWS_PROXY"
-  integration_uri    = local.product_category_lambdas.list.invoke_arn
+  integration_uri    = var.product_category_lambdas.list.invoke_arn
   integration_method = "POST"
   payload_format_version = "2.0"
 }
@@ -94,7 +89,7 @@ resource "aws_apigatewayv2_route" "list_product_categories" {
 resource "aws_apigatewayv2_integration" "get_product_category" {
   api_id             = aws_apigatewayv2_api.api.id
   integration_type   = "AWS_PROXY"
-  integration_uri    = local.product_category_lambdas.get.invoke_arn
+  integration_uri    = var.product_category_lambdas.get.invoke_arn
   integration_method = "POST"
   payload_format_version = "2.0"
 }
@@ -108,7 +103,7 @@ resource "aws_apigatewayv2_route" "get_product_category" {
 resource "aws_apigatewayv2_integration" "update_product_category" {
   api_id             = aws_apigatewayv2_api.api.id
   integration_type   = "AWS_PROXY"
-  integration_uri    = local.product_category_lambdas.update.invoke_arn
+  integration_uri    = var.product_category_lambdas.update.invoke_arn
   integration_method = "POST"
   payload_format_version = "2.0"
 }
@@ -122,7 +117,7 @@ resource "aws_apigatewayv2_route" "update_product_category" {
 resource "aws_apigatewayv2_integration" "delete_product_category" {
   api_id             = aws_apigatewayv2_api.api.id
   integration_type   = "AWS_PROXY"
-  integration_uri    = local.product_category_lambdas.delete.invoke_arn
+  integration_uri    = var.product_category_lambdas.delete.invoke_arn
   integration_method = "POST"
   payload_format_version = "2.0"
 }
@@ -136,7 +131,7 @@ resource "aws_apigatewayv2_route" "delete_product_category" {
 resource "aws_lambda_permission" "create_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.product_category_lambdas.create.name
+  function_name = var.product_category_lambdas.create.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category"
 }
@@ -144,7 +139,7 @@ resource "aws_lambda_permission" "create_product_category" {
 resource "aws_lambda_permission" "list_product_categories" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.product_category_lambdas.list.name
+  function_name = var.product_category_lambdas.list.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-categories"
 }
@@ -152,7 +147,7 @@ resource "aws_lambda_permission" "list_product_categories" {
 resource "aws_lambda_permission" "get_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.product_category_lambdas.get.name
+  function_name = var.product_category_lambdas.get.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 }
@@ -160,7 +155,7 @@ resource "aws_lambda_permission" "get_product_category" {
 resource "aws_lambda_permission" "update_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.product_category_lambdas.update.name
+  function_name = var.product_category_lambdas.update.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 }
@@ -168,7 +163,7 @@ resource "aws_lambda_permission" "update_product_category" {
 resource "aws_lambda_permission" "delete_product_category" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.product_category_lambdas.delete.name
+  function_name = var.product_category_lambdas.delete.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
 } 

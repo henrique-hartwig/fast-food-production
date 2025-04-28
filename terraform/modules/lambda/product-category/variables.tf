@@ -38,11 +38,6 @@ variable "lambda_description" {
   default     = "Lambda function to manage product categories"
 }
 
-variable "lambda_handler" {
-  description = "Handler of the Lambda function"
-  type        = string
-}
-
 variable "tags" {
   description = "Tags to be applied to the resources"
   type        = map(string)

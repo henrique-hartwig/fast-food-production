@@ -25,3 +25,9 @@ variable "subnet_ids" {
   description = "IDs of the subnets where the Lambda functions will be deployed"
   type        = list(string)
 } 
+
+variable "tags" {
+  description = "Tags to be applied to the resources"
+  type        = map(string)
+  default     = {}
+}

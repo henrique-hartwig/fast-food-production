@@ -8,8 +8,3 @@ output "lambda_functions" {
   }
   description = "Details of the Lambda functions created"
 }
-
-output "lambda_role_arn" {
-  value       = aws_iam_role.lambda_role.arn
-  description = "ARN of the IAM role used by the Lambda functions"
-} 

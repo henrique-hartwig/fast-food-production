@@ -31,3 +31,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "lambda_layer_arn" {
+  description = "Lambda Layer ARN"
+  type        = string
+}

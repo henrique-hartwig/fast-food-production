@@ -17,15 +17,15 @@
 #   tags = var.tags
 # }
 
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
-  role       = "arn:aws:iam::992382498858:role/LabRole"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
+# resource "aws_iam_role_policy_attachment" "lambda_basic" {
+#   role       = "arn:aws:iam::992382498858:role/LabRole"
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+# }
 
-resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
-  role       = "arn:aws:iam::992382498858:role/LabRole"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
+# resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
+#   role       = "arn:aws:iam::992382498858:role/LabRole"
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+# }
 
 resource "aws_security_group" "lambda_sg" {
   name        = "orders-lambda-sg-${var.environment}"
@@ -92,6 +92,8 @@ resource "aws_lambda_function" "orders_functions" {
   filename         = "${path.module}/../../../../dist/order/${each.key}.zip"
   source_code_hash = filebase64sha256("${path.module}/../../../../dist/order/${each.key}.zip")
   
+  layers           = [var.lambda_layer_arn]
+
   runtime          = "nodejs18.x"
   memory_size      = var.lambda_memory_size
   timeout          = var.lambda_timeout

@@ -1,8 +1,14 @@
+#!/bin/bash
+
+set -e
+
 mkdir -p dist
 
-for file in .build/application/handlers/**/*.js; 
-    do name=$(basename $file .js);
-    folder=$(basename $(dirname $file)); 
-    mkdir -p dist/$folder; 
-    zip -r dist/$folder/$name.zip $file .build/; 
+for domain in order product product_category; do
+  for usecase in $(ls .build/$domain/useCases); do
+    mkdir -p dist/$domain
+    zip -r dist/$domain/$usecase.zip \
+      .build/$domain/domain \
+      .build/$domain/useCases/$usecase
+  done
 done

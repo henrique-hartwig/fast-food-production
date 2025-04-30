@@ -23,7 +23,7 @@ export class CreateProductCategoryController {
       return {
         statusCode: 201,
         body: {
-          message: 'Product Category created successfully',
+          message: 'Product Category created successfully2',
           data: productCategory,
         },
       };

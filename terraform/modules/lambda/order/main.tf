@@ -89,7 +89,7 @@ resource "aws_lambda_function" "orders_functions" {
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  filename         = "/dist/order/${each.key}.zip"
+  filename         = "../../../dist/order/${each.key}.zip"
   # source_code_hash = filebase64sha256("${path.module}/../../../../.build/order/${each.key}.zip")
   
   layers           = [var.lambda_layer_arn]

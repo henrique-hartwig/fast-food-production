@@ -49,27 +49,27 @@ locals {
     create = {
       name        = "create-product-category"
       description = "Create a new product category"
-      handler     = "./build/application/handlers/productCategory/create.handler"
+      handler     = "./src/product-category/useCases/create/handler.ts"
     },
     get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
-      handler     = "./build/application/handlers/productCategory/get.handler"
+      handler     = "./src/product-category/useCases/get/handler.ts"
     },
     list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
-      handler     = "./build/application/handlers/productCategory/list.handler"
+      handler     = "./src/product-category/useCases/list/handler.ts"
     },
     update = {
       name        = "update-product-category"
       description = "Update an existing product category"
-      handler     = "./build/application/handlers/productCategory/update.handler"
+      handler     = "./src/product-category/useCases/update/handler.ts"
     },
     delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
-      handler     = "./build/application/handlers/productCategory/delete.handler"
+      handler     = "./src/product-category/useCases/delete/handler.ts"
     }
   }
 }
@@ -82,8 +82,8 @@ resource "aws_lambda_function" "product_category_functions" {
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  filename         = "${path.module}/../../../../dist/productCategory/${each.key}.zip"
-  source_code_hash = filebase64sha256("${path.module}/../../../../dist/productCategory/${each.key}.zip")
+  filename         = "${path.module}/../../../../dist/product-category/${each.key}.zip"
+  source_code_hash = filebase64sha256("${path.module}/../../../../dist/product-category/${each.key}.zip")
   
   layers           = [var.lambda_layer_arn]
 

@@ -1,10 +1,10 @@
+console.log('MODULE PATHS: ', module.paths);
 import { PrismaClient } from '@prisma/client';
 import logger from '../../utils/logger';
 
 let prismaClient: PrismaClient | null = null;
 
 export async function getPrismaClient(): Promise<PrismaClient> {
-  console.log('MODULE PATHS: ', module.paths);
   if (prismaClient) {
     return prismaClient;
   }

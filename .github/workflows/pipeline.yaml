@@ -14,7 +14,7 @@ env:
 
 jobs:
   terraform-validate:
-    name: 'Build and validate'
+    name: 'Build and deploy'
     runs-on: ubuntu-latest
 
     steps:

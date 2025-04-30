@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ProductCategoryService } from '../../../domain/services/ProductCategoryService';
+import { ProductCategoryService } from '../../domain/service';
 
 const ListProductCategoriesSchema = z.object({
   limit: z.number().int().positive().optional(),

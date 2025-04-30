@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ProductCategoryService } from '../../../domain/services/ProductCategoryService';
+import { ProductCategoryService } from '../../domain/service';
 
 const GetProductCategorySchema = z.object({
   id: z.number().int().positive()

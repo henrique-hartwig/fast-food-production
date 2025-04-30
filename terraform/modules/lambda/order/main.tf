@@ -90,7 +90,7 @@ resource "aws_lambda_function" "orders_functions" {
   handler       = each.value.handler
   
   filename         = "${path.module}/../../../../.build/order/${each.key}.zip"
-  source_code_hash = filebase64sha256("${path.module}/../../../../.build/order/${each.key}.zip")
+  # source_code_hash = filebase64sha256("${path.module}/../../../../.build/order/${each.key}.zip")
   
   layers           = [var.lambda_layer_arn]
 

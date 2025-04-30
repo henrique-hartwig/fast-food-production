@@ -50,32 +50,32 @@ locals {
     create = {
       name        = "create-order"
       description = "Cria um novo pedido"
-      handler     = "application/handlers/order/create.handler"
+      handler     = "./build/application/handlers/order/create.handler"
     },
     get = {
       name        = "get-order"
       description = "Obtém um pedido pelo ID"
-      handler     = "application/handlers/order/get.handler"
+      handler     = "./build/application/handlers/order/get.handler"
     },
     list = {
       name        = "list-orders"
       description = "Lista pedidos com paginação"
-      handler     = "application/handlers/order/list.handler"
+      handler     = "./build/application/handlers/order/list.handler"
     },
     update = {
       name        = "update-order"
       description = "Atualiza um pedido existente"
-      handler     = "application/handlers/order/update.handler"
+      handler     = "./build/application/handlers/order/update.handler"
     },
     update_status = {
       name        = "update-order-status"
       description = "Atualiza o status de um pedido existente"
-      handler     = "application/handlers/order/update_status.handler"
+      handler     = "./build/application/handlers/order/update_status.handler"
     },
     delete = {
       name        = "delete-order"
       description = "Remove um pedido"
-      handler     = "application/handlers/order/delete.handler"
+      handler     = "./build/application/handlers/order/delete.handler"
     }
   }
 }
@@ -84,7 +84,7 @@ locals {
 resource "aws_lambda_function" "orders_functions" {
   for_each = local.lambda_functions
 
-  function_name = "orders-${each.value.name}-${var.environment}"
+  function_name = "fast-food-orders-${each.value.name}-${var.environment}"
   description   = each.value.description
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { ProductCategoryService } from '../../../domain/services/ProductCategoryService';
-import { APIGatewayProxyResult } from 'aws-lambda';
 
 const CreateProductCategorySchema = z.object({
   name: z.string().trim().min(1).max(100),

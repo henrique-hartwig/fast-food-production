@@ -49,27 +49,27 @@ locals {
     create = {
       name        = "create-product-category"
       description = "Create a new product category"
-      handler     = "application/handlers/productCategory/create.handler"
+      handler     = "./build/application/handlers/productCategory/create.handler"
     },
     get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
-      handler     = "application/handlers/productCategory/get.handler"
+      handler     = "./build/application/handlers/productCategory/get.handler"
     },
     list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
-      handler     = "application/handlers/productCategory/list.handler"
+      handler     = "./build/application/handlers/productCategory/list.handler"
     },
     update = {
       name        = "update-product-category"
       description = "Update an existing product category"
-      handler     = "application/handlers/productCategory/update.handler"
+      handler     = "./build/application/handlers/productCategory/update.handler"
     },
     delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
-      handler     = "application/handlers/productCategory/delete.handler"
+      handler     = "./build/application/handlers/productCategory/delete.handler"
     }
   }
 }
@@ -77,7 +77,7 @@ locals {
 resource "aws_lambda_function" "product_category_functions" {
   for_each = local.lambda_functions
 
-  function_name = "product-category-${each.value.name}-${var.environment}"
+  function_name = "fast-food-orders-${each.value.name}-${var.environment}"
   description   = each.value.description
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler

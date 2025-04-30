@@ -12,7 +12,7 @@
     "migrate": "knex migrate:latest",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.ts\"",
-    "build:lambda": "rm -rf .build && tsc && cp -r node_modules .build/node_modules",
+    "build:lambda": "rm -rf .build && tsc && cd terraform/modules/lambda_layer && zip -r lambda_layer.zip install",
     "package:lambda": "chmod +x ./package-lambda.sh && ./package-lambda.sh",
     "deploy:infra": "npm run build:lambda && npm run package:lambda && terraform -chdir=terraform apply"
   },

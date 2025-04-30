@@ -10,7 +10,7 @@ for domain in order product product_category; do
     zip -r dist/$domain/$usecase.zip \
       .build/$domain/domain \
       .build/$domain/useCases/$usecase \
-      .build/database/prisma/prismaClient.ts \
+      .build/database/prisma/prismaClient.js \
       .build/utils
   done
 done

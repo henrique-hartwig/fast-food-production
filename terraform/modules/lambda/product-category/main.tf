@@ -83,7 +83,7 @@ resource "aws_lambda_function" "product_category_functions" {
   handler       = each.value.handler
   
   filename         = "${path.module}/../../../../dist/product-category/${each.key}.zip"
-  # source_code_hash = filebase64sha256("${path.module}/../../../../.build/product-category/${each.key}.zip")
+  source_code_hash = filebase64sha256("${path.module}/../../../../dist/product-category/${each.key}.zip")
   
   layers           = [var.lambda_layer_arn]
 

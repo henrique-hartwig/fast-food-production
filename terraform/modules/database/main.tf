@@ -50,7 +50,7 @@ resource "aws_db_instance" "db_fast_food_orders" {
   skip_final_snapshot    = true
   deletion_protection    = var.environment == "prod" ? true : false
   backup_retention_period = var.environment == "prod" ? 14 : 7
-  
+  publicly_accessible    = true
   tags = {
     Name        = "Fast Food Orders Database"
     Environment = var.environment

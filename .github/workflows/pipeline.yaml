@@ -11,11 +11,11 @@ on:
 env:
   AWS_REGION: us-east-1
   DB_HOST: fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com
-  DB_NAME: fast-food-orders-db-dev
+  DB_NAME: fast_food_orders
   DB_PORT: 5432
   DB_USER: postgres
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com:5432/fast-food-orders-db-dev?schema=public
+  DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com:5432/fast_food_orders?schema=public
   
 jobs:
   terraform-validate:

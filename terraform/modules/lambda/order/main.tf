@@ -50,32 +50,32 @@ locals {
     create = {
       name        = "create-order"
       description = "Cria um novo pedido"
-      handler     = "./.build/order/useCases/create/handler.js"
+      handler     = ".build/order/useCases/create/handler.js"
     },
     get = {
       name        = "get-order"
       description = "Obtém um pedido pelo ID"
-      handler     = "./.build/order/useCases/get/handler.js"
+      handler     = ".build/order/useCases/get/handler.js"
     },
     list = {
       name        = "list-orders"
       description = "Lista pedidos com paginação"
-      handler     = "./.build/order/useCases/list/handler.js"
+      handler     = ".build/order/useCases/list/handler.js"
     },
     update = {
       name        = "update-order"
       description = "Atualiza um pedido existente"
-      handler     = "./.build/order/useCases/update/handler.js"
+      handler     = ".build/order/useCases/update/handler.js"
     },
     update_status = {
       name        = "update-order-status"
       description = "Atualiza o status de um pedido existente"
-      handler     = "./.build/order/useCases/update_status/handler.js"
+      handler     = ".build/order/useCases/update_status/handler.js"
     },
     delete = {
       name        = "delete-order"
       description = "Remove um pedido"
-      handler     = "./.build/order/useCases/delete/handler.js"
+      handler     = ".build/order/useCases/delete/handler.js"
     }
   }
 }

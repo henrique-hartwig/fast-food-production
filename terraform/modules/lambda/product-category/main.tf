@@ -49,27 +49,27 @@ locals {
     create = {
       name        = "create-product-category"
       description = "Create a new product category"
-      handler     = "./.build/product_category/useCases/create/handler.js"
+      handler     = ".build/product_category/useCases/create/handler.js"
     },
     get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
-      handler     = "./.build/product_category/useCases/get/handler.js"
+      handler     = ".build/product_category/useCases/get/handler.js"
     },
     list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
-      handler     = "./.build/product_category/useCases/list/handler.js"
+      handler     = ".build/product_category/useCases/list/handler.js"
     },
     update = {
       name        = "update-product-category"
       description = "Update an existing product category"
-      handler     = "./.build/product_category/useCases/update/handler.js"
+      handler     = ".build/product_category/useCases/update/handler.js"
     },
     delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
-      handler     = "./.build/product_category/useCases/delete/handler.js"
+      handler     = ".build/product_category/useCases/delete/handler.js"
     }
   }
 }

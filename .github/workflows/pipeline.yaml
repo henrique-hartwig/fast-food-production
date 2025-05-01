@@ -30,6 +30,9 @@ jobs:
       - name: Package Lambda functions
         run: npm run package:lambda
 
+      - name: Prisma Generate
+        run: npm run prisma:generate
+
       - name: List dist
         run: ls -R dist
 

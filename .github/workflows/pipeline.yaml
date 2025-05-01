@@ -10,8 +10,13 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  DB_USERNAME: postgres
-
+  DB_HOST: fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com
+  DB_NAME: fast-food-orders-db-dev
+  DB_PORT: 5432
+  DB_USER: fast-food-orders-db-dev
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DATABASE_URL: postgresql://${{ env.DB_USER }}:${{ env.DB_PASSWORD }}@${{ env.DB_HOST }}:${{ env.DB_PORT }}/${{ env.DB_NAME }}?schema=public
+  
 jobs:
   terraform-validate:
     name: 'Build and deploy'
@@ -31,7 +36,9 @@ jobs:
         run: npm run package:lambda
 
       - name: Prisma Generate
-        run: npm run prisma:generate
+        run: |
+          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+          npm run prisma:generate
 
       - name: Prisma Migrate
         run: npm run prisma:migrate
@@ -51,7 +58,7 @@ jobs:
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          echo "TF_VAR_db_username=${{ env.DB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_db_username=${{ env.DB_USER }}" >> $GITHUB_ENV
           echo "TF_VAR_db_password=$DB_PASSWORD" >> $GITHUB_ENV
           echo "TF_VAR_environment=dev" >> $GITHUB_ENV
 

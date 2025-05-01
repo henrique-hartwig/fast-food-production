@@ -18,7 +18,7 @@ module "database" {
   db_password       = var.db_password
   db_port           = var.db_port
   vpc_id            = module.network.vpc_id
-  subnet_ids        = module.network.private_subnet_ids
+  subnet_ids        = module.network.public_subnet_ids
 }
 
 module "product_category" {

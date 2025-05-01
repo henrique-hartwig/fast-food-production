@@ -33,6 +33,9 @@ jobs:
       - name: Prisma Generate
         run: npm run prisma:generate
 
+      - name: Prisma Migrate
+        run: npm run prisma:migrate
+
       - name: List dist
         run: ls -R dist
 

@@ -1,5 +1,5 @@
 resource "aws_lambda_layer_version" "lambda_layer" {
-  filename   = "${path.module}/lambda_layer.zip"
+  filename   = "${path.module}/fast-food-lambda-layer.zip"
   layer_name = "fast-food-lambda-layer"
   compatible_runtimes = ["nodejs18.x"]
 

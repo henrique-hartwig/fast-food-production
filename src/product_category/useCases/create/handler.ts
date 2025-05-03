@@ -1,12 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DbProductCategoryRepository } from '../../domain/database';
 import { ProductCategoryService } from '../../domain/service';
-import { getPrismaClient } from '../../../database/prisma/prismaClient';
+import { PrismaClient } from '@prisma/client';
 import { CreateProductCategoryController } from './controller';
 import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const prismaClient = getPrismaClient();
+  const prismaClient = new PrismaClient();
 
   try {
     if (!event.body) {

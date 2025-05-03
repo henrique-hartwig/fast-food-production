@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Order, OrderItem } from './entity';
+import { Order, OrderItem, OrderStatus } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
 
@@ -13,7 +13,7 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: order.items,
+        items: order.items ?? [],
         total: order.total,
         status: order.status,
         userId: order.userId,
@@ -22,9 +22,9 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      (orderData.items as OrderItem[]) ?? [],
+      orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
       orderData.total,
-      orderData.status,
+      orderData.status as OrderStatus,
       orderData.userId,
     );
   }
@@ -40,9 +40,9 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      (orderData.items as OrderItem[]) ?? [],
+      orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
       orderData.total,
-      orderData.status,
+      orderData.status as OrderStatus,
       orderData.userId,
     );
   }
@@ -52,9 +52,15 @@ export class DbOrderRepository implements OrderRepository {
       where: { id: order.id },
       data: { status: order.status },
     });
-    return updatedOrder;
-  }
 
+    return new Order(
+      updatedOrder.id,
+      updatedOrder.items ? (updatedOrder.items as unknown as OrderItem[]) : [],
+      updatedOrder.total,
+      updatedOrder.status as OrderStatus,
+      updatedOrder.userId,
+    );
+  }
 
   async delete(id: number): Promise<boolean> {
     await this.prisma.order.delete({
@@ -68,13 +74,13 @@ export class DbOrderRepository implements OrderRepository {
       skip: offset,
       take: limit,
     });
-    return ordersData.map((order: Order) =>
+    return ordersData.map((orderData) =>
       new Order(
-        order.id,
-        (order.items as OrderItem[]) ?? [],
-        order.total,
-        order.status,
-        order.userId,
+        orderData.id,
+        orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
+        orderData.total,
+        orderData.status as OrderStatus,
+        orderData.userId,
       ),
     );
   }

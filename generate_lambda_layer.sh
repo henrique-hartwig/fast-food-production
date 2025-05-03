@@ -12,7 +12,7 @@ cd node_modules
 ls | grep prisma
 cd ..
 
-cd .. && zip -rq fastfood2-lambda-layer.zip nodejs
+cd .. && zip -rq fastfood1-lambda-layer.zip nodejs
 
-echo "Lambda Layer gerado em fastfood2-lambda-layer.zip"
-echo "Tamanho do arquivo zip: $(du -h fastfood2-lambda-layer.zip | cut -f1)"
+echo "Lambda Layer gerado em fastfood1-lambda-layer.zip"
+echo "Tamanho do arquivo zip: $(du -h fastfood1-lambda-layer.zip | cut -f1)"

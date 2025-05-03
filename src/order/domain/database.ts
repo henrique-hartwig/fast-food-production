@@ -14,7 +14,7 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: (order.items ?? []) as unknown as JsonValue,
+        items: order.items ?? [],
         total: order.total,
         status: order.status,
         userId: order.userId ?? undefined,

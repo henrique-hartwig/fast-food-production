@@ -6,7 +6,7 @@ import logger from '../../utils/logger';
 
 let prismaClient: PrismaClient | null = null;
 
-export async function getPrismaClient(): Promise<PrismaClient> {
+export function getPrismaClient(): PrismaClient {
   if (prismaClient) {
     return prismaClient;
   }
@@ -27,7 +27,7 @@ export async function getPrismaClient(): Promise<PrismaClient> {
     prismaClient = new PrismaClient();
     
     logger.info('Prisma client initialized successfully');
-    return await prismaClient.$connect();
+    return prismaClient;
   } catch (error) {
     logger.error('Failed to initialize Prisma client', error);
     throw error;

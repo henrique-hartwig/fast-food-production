@@ -10,7 +10,8 @@
     "outDir": ".build",
     "rootDir": "./src",
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noEmitOnError": false
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", ".serverless", ".build"]

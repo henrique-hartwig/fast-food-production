@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Order } from './entity';
+import { Order, OrderItem } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
 
@@ -22,7 +22,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items,
+      (orderData.items as OrderItem[]) ?? [],
       orderData.total,
       orderData.status,
       orderData.userId,
@@ -40,7 +40,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items,
+      (orderData.items as OrderItem[]) ?? [],
       orderData.total,
       orderData.status,
       orderData.userId,
@@ -71,7 +71,7 @@ export class DbOrderRepository implements OrderRepository {
     return ordersData.map((order: Order) =>
       new Order(
         order.id,
-        order.items,
+        (order.items as OrderItem[]) ?? [],
         order.total,
         order.status,
         order.userId,

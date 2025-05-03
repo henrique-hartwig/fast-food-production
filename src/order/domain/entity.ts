@@ -13,7 +13,7 @@ export enum OrderStatus {
 export class Order {
   constructor(
     public id: number,
-    public items: OrderItem[],
+    public items: OrderItem[] | null,
     public total: number,
     public status: OrderStatus,
     public userId?: number,

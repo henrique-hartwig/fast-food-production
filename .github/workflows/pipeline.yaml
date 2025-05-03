@@ -32,6 +32,7 @@ jobs:
       - name: Prisma Generate
         run: |
           echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+          cd terraform/modules/lambda_layer/nodejs
           npm run prisma:generate
 
       - name: Build Lambda functions

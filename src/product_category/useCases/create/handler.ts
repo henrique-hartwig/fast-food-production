@@ -1,7 +1,7 @@
+import { PrismaClient } from '@prisma/client';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DbProductCategoryRepository } from '../../domain/database';
 import { ProductCategoryService } from '../../domain/service';
-import { PrismaClient } from '@prisma/client';
 import { CreateProductCategoryController } from './controller';
 import logger from '../../../utils/logger';
 

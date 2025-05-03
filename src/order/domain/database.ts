@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Order, OrderItem, OrderStatus } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
-import { Prisma } from '@prisma/client';
+import type { JsonValue } from '@prisma/client/runtime/library';
 
 export class DbOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -14,7 +14,7 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: (order.items ?? []) as Prisma.InputJsonValue,
+        items: (order.items ?? []) as unknown as JsonValue,
         total: order.total,
         status: order.status,
         userId: order.userId ?? undefined,
@@ -26,7 +26,7 @@ export class DbOrderRepository implements OrderRepository {
       orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
       orderData.total,
       orderData.status as OrderStatus,
-      orderData.userId,
+      orderData.userId ?? undefined,
     );
   }
 

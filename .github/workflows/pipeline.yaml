@@ -35,13 +35,13 @@ jobs:
       - name: Package Lambda functions
         run: npm run package:lambda
 
-      # - name: Prisma Generate
-      #   run: |
-      #     echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
-      #     npm run prisma:generate
+      - name: Prisma Generate
+        run: |
+          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+          npm run prisma:generate
 
-      # - name: Prisma Migrate
-      #   run: npm run prisma:migrate
+      - name: Prisma Migrate
+        run: npm run prisma:migrate
 
       - name: List dist
         run: ls -R dist
@@ -120,4 +120,6 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        run: cd terraform && terraform apply -auto-approve tfplan
+        run: |
+          cd terraform
+          terraform apply -auto-approve tfplan

@@ -5,7 +5,7 @@ set -e
 cd terraform/modules/lambda_layer/nodejs 
 
 npm install
-npx prisma generate --schema=./src/database/prisma/schema.prisma
+npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
 cd .. && zip -rq fastfood-lambda-layer.zip nodejs
 

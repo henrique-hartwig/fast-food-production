@@ -14,5 +14,5 @@ cd ..
 
 cd .. && zip -rq fastfood-lambda-layer.zip nodejs
 
-echo "Lambda Layer gerado em fastfood-lambda-layer.zip"
-echo "Tamanho do arquivo zip: $(du -h fastfood-lambda-layer.zip | cut -f1)"
+echo "Lambda Layer gerado em fastfood2-lambda-layer.zip"
+echo "Tamanho do arquivo zip: $(du -h fastfood2-lambda-layer.zip | cut -f1)"

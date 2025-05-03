@@ -7,10 +7,13 @@ cd terraform/modules/lambda_layer/nodejs
 npm install
 npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
-ls -la
-cd node_modules
-ls | grep prisma
-cd ..
+echo "ECHOOOOO node_modules/@prisma/client"
+ls -la node_modules/@prisma/client
+
+echo "ECHOOOOO node_modules/.prisma"
+ls -la node_modules/.prisma
+
+echo "ECHO ACABOU ECHOOOO"
 
 cd .. && zip -rq fastfood-lambda-layer.zip nodejs
 

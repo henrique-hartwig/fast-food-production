@@ -29,14 +29,10 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
 
-      - name: Prisma Generate
-        run: |
-          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
-          npm run prisma:generate
-          mkdir -p ./terraform/modules/lambda_layer/nodejs/node_modules
-          cp -r ./node_modules/@prisma/ ./terraform/modules/lambda_layer/nodejs
-          cp -r ./node_modules/.prisma/ ./terraform/modules/lambda_layer/nodejs
-          cp -r ./node_modules/prisma/ ./terraform/modules/lambda_layer/nodejs
+      # - name: Prisma Generate
+      #   run: |
+      #     echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+      #     npm run prisma:generate
 
       - name: Build Lambda functions
         run: npm run build:lambda

@@ -29,16 +29,16 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
 
+      - name: Prisma Generate
+        run: |
+          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+          npm run prisma:generate
+
       - name: Build Lambda functions
         run: npm run build:lambda
 
       - name: Package Lambda functions
         run: npm run package:lambda
-
-      - name: Prisma Generate
-        run: |
-          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
-          npm run prisma:generate
 
       - name: Prisma Migrate
         run: npm run prisma:migrate

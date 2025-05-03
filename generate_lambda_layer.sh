@@ -7,7 +7,7 @@ cd terraform/modules/lambda_layer/nodejs
 npm install
 npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
-ls
+ls -la
 cd node_modules
 ls | grep prisma
 cd ..

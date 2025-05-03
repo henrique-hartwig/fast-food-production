@@ -74,7 +74,7 @@ export class DbOrderRepository implements OrderRepository {
       skip: offset,
       take: limit,
     });
-    return ordersData.map((orderData) =>
+    return ordersData.map((orderData: Order) =>
       new Order(
         orderData.id,
         orderData.items ? (orderData.items as unknown as OrderItem[]) : [],

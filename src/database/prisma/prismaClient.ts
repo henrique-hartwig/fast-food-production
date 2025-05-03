@@ -27,7 +27,7 @@ export async function getPrismaClient(): Promise<PrismaClient> {
     prismaClient = new PrismaClient();
     
     logger.info('Prisma client initialized successfully');
-    return prismaClient;
+    return await prismaClient.$connect();
   } catch (error) {
     logger.error('Failed to initialize Prisma client', error);
     throw error;

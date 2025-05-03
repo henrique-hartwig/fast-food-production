@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Order, OrderItem, OrderStatus } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
+import { Prisma } from '@prisma/client';
 
 export class DbOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -13,10 +14,10 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: order.items ?? [],
+        items: (order.items ?? []) as Prisma.InputJsonValue,
         total: order.total,
         status: order.status,
-        userId: order.userId,
+        userId: order.userId ?? undefined,
       },
     });
 
@@ -43,14 +44,14 @@ export class DbOrderRepository implements OrderRepository {
       orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
       orderData.total,
       orderData.status as OrderStatus,
-      orderData.userId,
+      orderData.userId ?? undefined,
     );
   }
 
   async update(order: Order): Promise<Order> {
     const updatedOrder = await this.prisma.order.update({
       where: { id: order.id },
-      data: { status: order.status },
+      data: { status: order.status, userId: order.userId ?? undefined },
     });
 
     return new Order(
@@ -58,7 +59,7 @@ export class DbOrderRepository implements OrderRepository {
       updatedOrder.items ? (updatedOrder.items as unknown as OrderItem[]) : [],
       updatedOrder.total,
       updatedOrder.status as OrderStatus,
-      updatedOrder.userId,
+      updatedOrder.userId ?? undefined,
     );
   }
 
@@ -80,7 +81,7 @@ export class DbOrderRepository implements OrderRepository {
         orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
         orderData.total,
         orderData.status as OrderStatus,
-        orderData.userId,
+        orderData.userId ?? undefined,
       ),
     );
   }

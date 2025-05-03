@@ -17,7 +17,7 @@ resource "aws_security_group" "security_group_fast_food_orders" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
   }
 
   egress {

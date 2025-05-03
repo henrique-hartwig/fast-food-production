@@ -49,12 +49,12 @@ locals {
     create = {
       name        = "create-product-category"
       description = "Create a new product category"
-      handler     = "product_category/useCases/create/handler.handler"
+      handler     = ".build/product_category/useCases/create/handler.handler"
     },
     get = {
       name        = "get-product-category"
       description = "Get a product category by ID"
-      handler     = ".build/product_category/useCases/get/handler.js"
+      handler     = ".build/product_category/useCases/get/handler.handler"
     },
     list = {
       name        = "list-product-categories"

@@ -1,7 +1,19 @@
 import { PrismaClient } from '@prisma/client';
-import { Order, OrderStatus } from './entity';
+import { Order, OrderStatus, Items } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
+
+function parseItems(items: any): Items | null {
+  if (!items) return null;
+  if (typeof items === 'string') {
+    try {
+      return JSON.parse(items);
+    } catch {
+      return null;
+    }
+  }
+  return items as Items;
+}
 
 export class DbOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -13,7 +25,7 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: (order.items ?? []) as any,
+        items: order.items ?? { items: [] },
         total: order.total,
         status: order.status,
         userId: order.userId ?? undefined,
@@ -22,7 +34,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items,
+      parseItems(orderData.items),
       orderData.total,
       orderData.status as OrderStatus,
       orderData.userId ?? undefined,
@@ -40,7 +52,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items,
+      parseItems(orderData.items),
       orderData.total,
       orderData.status as OrderStatus,
       orderData.userId ?? undefined,
@@ -55,7 +67,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       updatedOrder.id,
-      updatedOrder.items,
+      parseItems(updatedOrder.items),
       updatedOrder.total,
       updatedOrder.status as OrderStatus,
       updatedOrder.userId ?? undefined,
@@ -74,10 +86,10 @@ export class DbOrderRepository implements OrderRepository {
       skip: offset,
       take: limit,
     });
-    return ordersData.map((orderData: Order) =>
+    return ordersData.map((orderData) =>
       new Order(
         orderData.id,
-        orderData.items,
+        parseItems(orderData.items),
         orderData.total,
         orderData.status as OrderStatus,
         orderData.userId ?? undefined,

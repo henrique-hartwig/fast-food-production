@@ -61,7 +61,7 @@ jobs:
 
       - name: Prisma Migrate
         working-directory: terraform/modules/lambda_layer/nodejs
-        run: npm run prisma migrate dev --schema=../../../../src/database/prisma/schema.prisma
+        run: npx prisma migrate dev --schema=../../../../src/database/prisma/schema.prisma
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

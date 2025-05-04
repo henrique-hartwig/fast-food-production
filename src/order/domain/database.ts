@@ -25,7 +25,7 @@ export class DbOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order> {
     const orderData = await this.prisma.order.create({
       data: {
-        items: order.items ?? { items: [] },
+        items: order.items ? JSON.parse(JSON.stringify(order.items)) : { items: [] },
         total: order.total,
         status: order.status,
         userId: order.userId ?? undefined,
@@ -62,7 +62,12 @@ export class DbOrderRepository implements OrderRepository {
   async update(order: Order): Promise<Order> {
     const updatedOrder = await this.prisma.order.update({
       where: { id: order.id },
-      data: { status: order.status, userId: order.userId ?? undefined },
+      data: {
+        items: order.items ? JSON.parse(JSON.stringify(order.items)) : { items: [] },
+        total: order.total,
+        status: order.status,
+        userId: order.userId ?? undefined,
+      },
     });
 
     return new Order(

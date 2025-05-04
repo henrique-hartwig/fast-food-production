@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import logger from '../../utils/logger';
 
 
-export function getPrismaClient(): PrismaClient {
+export function getPrismaClient() {
   try {
     const prismaClient = new PrismaClient();
     

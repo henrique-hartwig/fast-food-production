@@ -26,22 +26,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Node.js dependencies
-        run: npm ci
+      - name: Install Lambda Layer dependencies
+        working-directory: terraform/modules/lambda_layer/nodejs
+        run: |
+          npm install
+          npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
-      # - name: Prisma Generate
-      #   run: |
-      #     echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
-      #     npm run prisma:generate
+      - name: List generated files (debug)
+        working-directory: terraform/modules/lambda_layer/nodejs
+        run: |
+          echo "ECHOOOOO node_modules/@prisma/client"
+          ls -la node_modules/@prisma/client
+          echo "ECHOOOOO node_modules/.prisma"
+          ls -la node_modules/.prisma
+          echo "ECHOOOOO node_modules/prisma"
+          ls -la node_modules/prisma
+          echo "ECHO ACABOU ECHOOOO"
 
-      - name: Build Lambda functions
-        run: npm run build:lambda
+      - name: Generate Lambda Layer zip file
+        working-directory: terraform/modules/lambda_layer
+        run: |
+          zip -rq fast-food-lambda-layer.zip nodejs
+          echo "Lambda Layer generated in fast-food-lambda-layer.zip"
+          echo "Size of the zip file: $(du -h fast-food-lambda-layer.zip | cut -f1)"
+
+      - name: Build application
+        run: npm run build
 
       - name: Package Lambda functions
         run: npm run package:lambda
 
       - name: Prisma Migrate
-        run: npm run prisma:migrate
+        working-directory: terraform/modules/lambda_layer/nodejs
+        run: npm run prisma migrate dev --schema=../../../../src/database/prisma/schema.prisma
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

@@ -1,32 +1,3 @@
-# resource "aws_iam_role" "lambda_role" {
-#   name = "orders-lambda-role-${var.environment}"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "lambda.amazonaws.com"
-#         }
-#       }
-#     ]
-#   })
-
-#   tags = var.tags
-# }
-
-# resource "aws_iam_role_policy_attachment" "lambda_basic" {
-#   role       = "arn:aws:iam::992382498858:role/LabRole"
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-# }
-
-# resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
-#   role       = "arn:aws:iam::992382498858:role/LabRole"
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-# }
-
 resource "aws_security_group" "lambda_sg" {
   name        = "orders-lambda-sg-${var.environment}"
   description = "Security group for the Lambda functions of the Orders microservice"

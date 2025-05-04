@@ -30,10 +30,20 @@ jobs:
         run: npm ci
 
       - name: Install Lambda Layer dependencies
-        working-directory: terraform/modules/lambda_layer/nodejs
+        working-directory: terraform/modules/lambda_layer/dependencies/nodejs
         run: |
           npm install
+
+      - name: Generate Prisma Client Lambda Layer
+        working-directory: terraform/modules/lambda_layer/
+        run: |
+          mkdir -p prisma && cd prisma && mkdir -p nodejs && cd nodejs
           npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
+          ls -R
+          cd ../../../
+          echo "Estrutura de diretórios:"
+          find . -type d | sort
+          echo "FIMMMMMM"
 
       - name: List generated files (debug)
         working-directory: terraform/modules/lambda_layer/nodejs
@@ -46,12 +56,19 @@ jobs:
           ls -la node_modules/prisma
           echo "ECHO ACABOU ECHOOOO"
 
-      - name: Generate Lambda Layer zip file
-        working-directory: terraform/modules/lambda_layer
+      - name: Generate Dependencies Lambda Layer zip file
+        working-directory: terraform/modules/lambda_layer/dependencies
         run: |
           zip -rq fast-food-lambda-layer.zip nodejs
-          echo "Lambda Layer generated in fast-food-lambda-layer.zip"
+          echo "Dependencies Lambda Layer generated in fast-food-lambda-layer.zip"
           echo "Size of the zip file: $(du -h fast-food-lambda-layer.zip | cut -f1)"
+
+      - name: Generate Prisma Lambda Layer zip file
+        working-directory: terraform/modules/lambda_layer/prisma
+        run: |
+          zip -rq fast-food-lambda-layer-prisma.zip nodejs
+          echo "Prisma Lambda Layer generated in fast-food-lambda-layer-prisma.zip"
+          echo "Size of the zip file: $(du -h fast-food-lambda-layer-prisma.zip | cut -f1)"
 
       - name: Build application
         run: npm run build

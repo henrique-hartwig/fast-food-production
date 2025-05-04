@@ -56,7 +56,7 @@ resource "aws_lambda_function" "product_category_functions" {
   filename         = "${path.module}/../../../../dist/product_category/${each.key}.zip"
   source_code_hash = filebase64sha256("${path.module}/../../../../dist/product_category/${each.key}.zip")
   
-  layers           = [var.lambda_layer_arn]
+  layers           = var.lambda_layers
 
   runtime          = "nodejs18.x"
   memory_size      = var.lambda_memory_size

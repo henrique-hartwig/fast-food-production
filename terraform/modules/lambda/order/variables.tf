@@ -32,7 +32,7 @@ variable "tags" {
   default     = {}
 }
 
-variable "lambda_layer_arn" {
-  description = "Lambda Layer ARN"
-  type        = string
+variable "lambda_layers" {
+  description = "Lambda Layers ARN"
+  type        = list(string)
 }

@@ -63,7 +63,7 @@ resource "aws_lambda_function" "orders_functions" {
   filename         = "${path.module}/../../../../dist/order/${each.key}.zip"
   source_code_hash = filebase64sha256("${path.module}/../../../../dist/order/${each.key}.zip")
   
-  layers           = [var.lambda_layer_arn]
+  layers           = var.lambda_layers
 
   runtime          = "nodejs18.x"
   memory_size      = var.lambda_memory_size

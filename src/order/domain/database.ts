@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Order, OrderStatus, Items } from './entity';
 import { OrderRepository } from './repository';
-import { getPrismaClient } from '../../database/prisma/prismaClient';
 
 function parseItems(items: any): Items | null {
   if (!items) return null;
@@ -19,7 +18,7 @@ export class DbOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
-    this.prisma = prisma || getPrismaClient();
+    this.prisma = prisma;
   }
 
   async create(order: Order): Promise<Order> {
@@ -91,7 +90,7 @@ export class DbOrderRepository implements OrderRepository {
       skip: offset,
       take: limit,
     });
-    return ordersData.map((orderData) =>
+    return ordersData.map((orderData: Order) =>
       new Order(
         orderData.id,
         parseItems(orderData.items),

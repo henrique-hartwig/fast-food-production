@@ -29,7 +29,7 @@ module "product_category" {
   subnet_ids         = module.network.private_subnet_ids
   lambda_memory_size = var.lambda_memory_size
   lambda_timeout     = var.lambda_timeout
-  lambda_layer_arn   = module.lambda_layer.arn
+  lambda_layers      = [module.lambda_layer.dependencies_layer_arn, module.lambda_layer.prisma_layer_arn]
   tags = {
     Service = "ProductCategory"
   }
@@ -43,7 +43,7 @@ module "order" {
   subnet_ids         = module.network.private_subnet_ids
   lambda_memory_size = var.lambda_memory_size
   lambda_timeout     = var.lambda_timeout
-  lambda_layer_arn   = module.lambda_layer.arn
+  lambda_layers      = [module.lambda_layer.dependencies_layer_arn, module.lambda_layer.prisma_layer_arn]
   tags = {
     Service = "Order"
   }
@@ -61,6 +61,7 @@ module "api_gateway" {
     Service = "API Gateway"
   }
 }
+
 module "lambda_layer" {
   source = "./modules/lambda_layer"
 }

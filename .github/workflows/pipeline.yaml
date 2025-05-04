@@ -50,8 +50,8 @@ jobs:
           echo "Lambda Layer generated in fast-food-lambda-layer.zip"
           echo "Size of the zip file: $(du -h fast-food-lambda-layer.zip | cut -f1)"
 
-      - name: Build application
-        run: npm run build
+      - name: Install and build application
+        run: npm install && npm run build
 
       - name: Package Lambda functions
         run: npm run package:lambda

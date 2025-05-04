@@ -10,5 +10,9 @@
     "format": "prettier --write \"**/*.ts\"",
     "package:lambda": "chmod +x ./package-lambda.sh && ./package-lambda.sh",
     "deploy:infra": "npm run build && npm run package:lambda && terraform -chdir=terraform apply"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "ts-node": "^10.9.1"
   }
 }

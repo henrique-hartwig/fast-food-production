@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { OrderService } from '../../domain/service';
 import { DbOrderRepository } from '../../domain/database';
-import { getPrismaClient } from '../../../database/prisma/prismaClient';
+import getPrismaClient from '../../../database/prisma/prismaClient';
 import { ListOrdersController } from './controller';
 import logger from '../../../utils/logger';
 

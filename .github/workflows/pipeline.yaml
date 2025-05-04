@@ -16,7 +16,7 @@ env:
   DB_USER: postgres
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com:5432/fast_food_orders?schema=public
-  
+
 jobs:
   terraform-validate:
     name: 'Build and deploy'
@@ -37,24 +37,7 @@ jobs:
       - name: Generate Prisma Client Lambda Layer
         working-directory: terraform/modules/lambda_layer/
         run: |
-          mkdir -p prisma/nodejs && cd prisma/nodejs
-          npx prisma generate --schema=../../../../../src/database/prisma/schema.prisma
-          ls -R
-          cd ../../
-          echo "Estrutura de diretórios:"
-          find . -type d | sort
-          echo "FIMMMMMM"
-
-      - name: List generated files (debug)
-        working-directory: terraform/modules/lambda_layer/nodejs
-        run: |
-          echo "ECHOOOOO node_modules/@prisma/client"
-          ls -la node_modules/@prisma/client
-          echo "ECHOOOOO node_modules/.prisma"
-          ls -la node_modules/.prisma
-          echo "ECHOOOOO node_modules/prisma"
-          ls -la node_modules/prisma
-          echo "ECHO ACABOU ECHOOOO"
+          npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
       - name: Generate Dependencies Lambda Layer zip file
         working-directory: terraform/modules/lambda_layer/dependencies

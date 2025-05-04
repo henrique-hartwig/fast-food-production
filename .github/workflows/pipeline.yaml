@@ -37,7 +37,7 @@ jobs:
       - name: Generate Prisma Client Lambda Layer
         working-directory: terraform/modules/lambda_layer/
         run: |
-          npx prisma generate --schema=../../../../../src/database/prisma/schema.prisma
+          npx prisma generate --schema=../../../src/database/prisma/schema.prisma
 
       - name: Generate Dependencies Lambda Layer zip file
         working-directory: terraform/modules/lambda_layer/dependencies
@@ -60,8 +60,8 @@ jobs:
         run: npm run package:lambda
 
       - name: Prisma Migrate
-        working-directory: terraform/modules/lambda_layer/nodejs
-        run: npx prisma migrate dev --schema=../../../../src/database/prisma/schema.prisma
+        # working-directory: terraform/modules/lambda_layer/prisma/nodejs
+        run: npx prisma migrate dev --schema=./src/database/prisma/schema.prisma
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

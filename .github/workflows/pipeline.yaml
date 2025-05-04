@@ -29,7 +29,7 @@ jobs:
       - name: Install Lambda Layer dependencies
         working-directory: terraform/modules/lambda_layer/nodejs
         run: |
-          npm install --production
+          npm install --omit=dev
           npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
       - name: List generated files (debug)

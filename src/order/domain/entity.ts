@@ -3,6 +3,10 @@ export interface OrderItem {
   quantity: number;
 }
 
+export interface Items {
+  items: OrderItem[];
+}
+
 export enum OrderStatus {
   RECEIVED = 'received',
   IN_PREPARATION = 'in_preparation',
@@ -13,7 +17,7 @@ export enum OrderStatus {
 export class Order {
   constructor(
     public id: number,
-    public items: OrderItem[] | null,
+    public items: Items,
     public total: number,
     public status: OrderStatus,
     public userId?: number,

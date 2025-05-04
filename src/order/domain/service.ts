@@ -1,10 +1,10 @@
-import { Order, OrderItem, OrderStatus } from './entity';
+import { Items, Order, OrderStatus } from './entity';
 import { OrderRepository } from './repository';
 
 export class OrderService {
   constructor(private order: OrderRepository) {}
 
-  async createOrder(items: OrderItem[], total: number, userId?: number): Promise<Order> {
+  async createOrder(items: Items, total: number, userId?: number): Promise<Order> {
     const order = new Order(Date.now(), items, total, OrderStatus.RECEIVED, userId);
     return this.order.create(order);
   }
@@ -13,7 +13,7 @@ export class OrderService {
     return this.order.findById(id);
   }
 
-  async updateOrder(id: number, items: OrderItem[], total: number, userId?: number): Promise<Order> {
+  async updateOrder(id: number, items: Items, total: number, userId?: number): Promise<Order> {
     const order = new Order(id, items, total, OrderStatus.RECEIVED, userId);
     return this.order.update(order);
   }

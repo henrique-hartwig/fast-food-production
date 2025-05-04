@@ -22,7 +22,7 @@ export class CreateOrderController {
       const validatedData = CreateOrderSchema.parse(request);
 
       const order = await this.orderService.createOrder(
-        validatedData.items,
+        { items: validatedData.items },
         validatedData.total,
         validatedData.userId,
       );

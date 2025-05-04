@@ -24,7 +24,7 @@ export class UpdateOrderController {
 
       const order = await this.orderService.updateOrder(
         validatedData.id,
-        validatedData.items,
+        { items: validatedData.items },
         validatedData.total,
         validatedData.userId
       );

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Order, OrderItem, OrderStatus } from './entity';
+import { Order, OrderStatus } from './entity';
 import { OrderRepository } from './repository';
 import { getPrismaClient } from '../../database/prisma/prismaClient';
 
@@ -22,7 +22,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
+      orderData.items,
       orderData.total,
       orderData.status as OrderStatus,
       orderData.userId ?? undefined,
@@ -40,7 +40,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       orderData.id,
-      orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
+      orderData.items,
       orderData.total,
       orderData.status as OrderStatus,
       orderData.userId ?? undefined,
@@ -55,7 +55,7 @@ export class DbOrderRepository implements OrderRepository {
 
     return new Order(
       updatedOrder.id,
-      updatedOrder.items ? (updatedOrder.items as unknown as OrderItem[]) : [],
+      updatedOrder.items,
       updatedOrder.total,
       updatedOrder.status as OrderStatus,
       updatedOrder.userId ?? undefined,
@@ -77,7 +77,7 @@ export class DbOrderRepository implements OrderRepository {
     return ordersData.map((orderData: Order) =>
       new Order(
         orderData.id,
-        orderData.items ? (orderData.items as unknown as OrderItem[]) : [],
+        orderData.items,
         orderData.total,
         orderData.status as OrderStatus,
         orderData.userId ?? undefined,

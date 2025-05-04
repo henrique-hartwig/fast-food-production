@@ -26,10 +26,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Install Lambda Layer dependencies
         working-directory: terraform/modules/lambda_layer/nodejs
         run: |
-          npm install --omit=dev
+          npm install
           npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
 
       - name: List generated files (debug)
@@ -50,8 +53,8 @@ jobs:
           echo "Lambda Layer generated in fast-food-lambda-layer.zip"
           echo "Size of the zip file: $(du -h fast-food-lambda-layer.zip | cut -f1)"
 
-      - name: Install and build application
-        run: npm install && npm run build
+      - name: Build application
+        run: npm run build
 
       - name: Package Lambda functions
         run: npm run package:lambda

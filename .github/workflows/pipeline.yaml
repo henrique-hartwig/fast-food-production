@@ -37,7 +37,7 @@ jobs:
       - name: Generate Prisma Client Lambda Layer
         working-directory: terraform/modules/lambda_layer/
         run: |
-          npx prisma generate --schema=../../../../src/database/prisma/schema.prisma
+          npx prisma generate --schema=../../../../../src/database/prisma/schema.prisma
 
       - name: Generate Dependencies Lambda Layer zip file
         working-directory: terraform/modules/lambda_layer/dependencies

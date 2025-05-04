@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.6.0",
     "aws-lambda": "^1.0.7",
     "knex": "^2.5.1",
     "pg": "^8.11.3",
@@ -17,7 +18,7 @@
     "winston": "^3.10.0",
     "zod": "^3.22.2"
   },
-  "devDependencies": {
-    "prisma": "^6.7.0"
-  }
+    "devDependencies": {
+      "prisma": "^6.7.0"
+    }
 }

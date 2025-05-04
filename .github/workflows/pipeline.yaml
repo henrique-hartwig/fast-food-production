@@ -37,12 +37,10 @@ jobs:
       - name: Generate Prisma Client Lambda Layer
         working-directory: terraform/modules/lambda_layer/
         run: |
-          mkdir -p prisma/nodejs
-          find . -type d | sort
-          cd prisma/nodejs
+          mkdir -p prisma/nodejs && cd prisma/nodejs
           npx prisma generate --schema=../../../../../src/database/prisma/schema.prisma
           ls -R
-          cd ../../../
+          cd ../../
           echo "Estrutura de diretórios:"
           find . -type d | sort
           echo "FIMMMMMM"

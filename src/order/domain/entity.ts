@@ -17,7 +17,7 @@ export enum OrderStatus {
 export class Order {
   constructor(
     public id: number,
-    public items: Items,
+    public items: Items | null,
     public total: number,
     public status: OrderStatus,
     public userId?: number,

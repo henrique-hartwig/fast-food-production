@@ -17,8 +17,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       };
     }
 
-    const body = JSON.parse(event.body);
-    const requestData = JSON.parse(body);
+    const requestData = JSON.parse(event.body);
 
     const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
     const productCategoryService = new ProductCategoryService(productCategoryRepository);

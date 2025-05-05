@@ -15,7 +15,7 @@ env:
   DB_PORT: 5432
   DB_USER: postgres
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com:5432/fast_food_orders?schema=public
+  DATABASE_URL: postgresql://postgres:password123@fast-food-orders-db-dev.cjg0oioy0rgq.us-east-1.rds.amazonaws.com:5432/fast_food_orders?schema=public
 
 jobs:
   terraform-validate:
@@ -60,7 +60,6 @@ jobs:
         run: npm run package:lambda
 
       - name: Prisma Migrate
-        # working-directory: terraform/modules/lambda_layer/prisma/nodejs
         run: npx prisma migrate dev --schema=./src/database/prisma/schema.prisma
 
       - name: Configure AWS credentials

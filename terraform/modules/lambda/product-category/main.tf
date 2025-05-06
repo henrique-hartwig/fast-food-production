@@ -30,17 +30,17 @@ locals {
     list = {
       name        = "list-product-categories"
       description = "List product categories with pagination"
-      handler     = ".build/product_category/useCases/list/handler.js"
+      handler     = ".build/product_category/useCases/list/handler.handler"
     },
     update = {
       name        = "update-product-category"
       description = "Update an existing product category"
-      handler     = ".build/product_category/useCases/update/handler.js"
+      handler     = ".build/product_category/useCases/update/handler.handler"
     },
     delete = {
       name        = "delete-product-category"
       description = "Remove a product category"
-      handler     = ".build/product_category/useCases/delete/handler.js"
+      handler     = ".build/product_category/useCases/delete/handler.handler"
     }
   }
 }

@@ -166,6 +166,121 @@ resource "aws_lambda_permission" "delete_product_category" {
   function_name = var.product_category_lambdas.delete.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product-category/*"
+}
+
+
+################################################################################
+# Product
+################################################################################
+
+resource "aws_apigatewayv2_integration" "create_product" {
+  api_id             = aws_apigatewayv2_api.api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = var.product_lambdas.create.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "create_product" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "POST /product"
+  target    = "integrations/${aws_apigatewayv2_integration.create_product.id}"
+}
+
+resource "aws_apigatewayv2_integration" "list_product" {
+  api_id             = aws_apigatewayv2_api.api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = var.product_lambdas.list.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "list_product" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "GET /product"
+  target    = "integrations/${aws_apigatewayv2_integration.list_product.id}"
+}
+
+resource "aws_apigatewayv2_integration" "get_product" {
+  api_id             = aws_apigatewayv2_api.api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = var.product_lambdas.get.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "get_product" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "GET /product/{id}"
+  target    = "integrations/${aws_apigatewayv2_integration.get_product.id}"
+}
+
+resource "aws_apigatewayv2_integration" "update_product" {
+  api_id             = aws_apigatewayv2_api.api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = var.product_lambdas.update.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "update_product" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "PUT /product/{id}"
+  target    = "integrations/${aws_apigatewayv2_integration.update_product.id}"
+}
+
+resource "aws_apigatewayv2_integration" "delete_product" {
+  api_id             = aws_apigatewayv2_api.api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = var.product_lambdas.delete.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "delete_product" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "DELETE /product/{id}"
+  target    = "integrations/${aws_apigatewayv2_integration.delete_product.id}"
+}
+
+resource "aws_lambda_permission" "create_product" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.product_lambdas.create.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product"
+}
+
+resource "aws_lambda_permission" "list_product" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.product_lambdas.list.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product"
+}
+
+resource "aws_lambda_permission" "get_product" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.product_lambdas.get.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product/*"
+}
+
+resource "aws_lambda_permission" "update_product" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.product_lambdas.update.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product/*"
+}
+
+resource "aws_lambda_permission" "delete_product" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.product_lambdas.delete.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*/product/*"
 } 
 
 ################################################################################

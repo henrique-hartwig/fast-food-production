@@ -28,6 +28,15 @@ variable "product_category_lambdas" {
   }))
 }
 
+variable "product_lambdas" {
+  description = "Information about the product lambda functions"
+  type = map(object({
+    function_name       = string
+    arn        = string
+    invoke_arn = string
+  }))
+}
+
 variable "order_lambdas" {
   description = "Information about the order lambda functions"
   type = map(object({

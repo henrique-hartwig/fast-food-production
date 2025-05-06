@@ -72,6 +72,7 @@ resource "aws_lambda_function" "orders_functions" {
   environment {
     variables = {
       NODE_ENV     = var.environment
+      DATABASE_URL = var.database_url
     }
   }
 

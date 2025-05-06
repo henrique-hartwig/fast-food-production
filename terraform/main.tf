@@ -36,10 +36,26 @@ module "product_category" {
   }
 }
 
+module "product" {
+  source = "./modules/lambda/product"
+
+  environment        = var.environment
+  database_url       = var.database_url
+  vpc_id             = module.network.vpc_id
+  subnet_ids         = module.network.private_subnet_ids
+  lambda_memory_size = var.lambda_memory_size
+  lambda_timeout     = var.lambda_timeout
+  lambda_layers      = [module.lambda_layer.dependencies_layer_arn, module.lambda_layer.prisma_layer_arn]
+  tags = {
+    Service = "Product"
+  }
+}
+
 module "order" {
   source = "./modules/lambda/order"
 
   environment        = var.environment
+  database_url       = var.database_url
   vpc_id             = module.network.vpc_id
   subnet_ids         = module.network.private_subnet_ids
   lambda_memory_size = var.lambda_memory_size
@@ -58,6 +74,7 @@ module "api_gateway" {
   api_description          = var.api_description
   product_category_lambdas = module.product_category.lambda_functions
   order_lambdas            = module.order.lambda_functions
+  product_lambdas          = module.product.lambda_functions
   tags = {
     Service = "API Gateway"
   }

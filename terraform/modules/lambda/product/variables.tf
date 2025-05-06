@@ -24,7 +24,19 @@ variable "vpc_id" {
 variable "subnet_ids" {
   description = "IDs of the subnets where the Lambda functions will be deployed"
   type        = list(string)
-} 
+}
+
+variable "lambda_name" {
+  description = "Base name of the Lambda function"
+  type        = string
+  default     = "fast-food-product-category"
+}
+
+variable "lambda_description" {
+  description = "Description of the Lambda function"
+  type        = string
+  default     = "Lambda function to manage product categories"
+}
 
 variable "tags" {
   description = "Tags to be applied to the resources"

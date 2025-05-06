@@ -25,6 +25,7 @@ module "product_category" {
   source = "./modules/lambda/product-category"
 
   environment        = var.environment
+  database_url       = var.database_url
   vpc_id             = module.network.vpc_id
   subnet_ids         = module.network.private_subnet_ids
   lambda_memory_size = var.lambda_memory_size

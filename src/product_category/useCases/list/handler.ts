@@ -9,21 +9,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const prismaClient = getPrismaClient();
 
   try {
-    if (!event.body) {
-      return {
-        statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Request body is required' })
-      };
-    }
-
-    const requestData = JSON.parse(event.body);
+    const queryParams = event.queryStringParameters || {};
+    const limit = queryParams.limit ? parseInt(queryParams.limit) : undefined;
+    const offset = queryParams.offset ? parseInt(queryParams.offset) : undefined;
 
     const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
     const productCategoryService = new ProductCategoryService(productCategoryRepository);
     const productCategoryController = new ListProductCategoriesController(productCategoryService);
 
-    const result = await productCategoryController.handle(requestData);
+    const result = await productCategoryController.handle({ limit, offset });
 
     return {
       statusCode: 200,
@@ -38,4 +32,4 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       body: JSON.stringify({ message: 'Internal server error' })
     };
   }
-}; 
+};

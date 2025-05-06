@@ -65,6 +65,7 @@ resource "aws_lambda_function" "product_category_functions" {
   environment {
     variables = {
       NODE_ENV     = var.environment
+      DATABASE_URL = var.database_url
     }
   }
 

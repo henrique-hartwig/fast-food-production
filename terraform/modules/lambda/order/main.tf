@@ -20,32 +20,32 @@ locals {
   lambda_functions = {
     create = {
       name        = "create-order"
-      description = "Cria um novo pedido"
+      description = "Create a new order"
       handler     = ".build/order/useCases/create/handler.handler"
     },
     get = {
       name        = "get-order"
-      description = "Obtém um pedido pelo ID"
+      description = "Get an order by ID"
       handler     = ".build/order/useCases/get/handler.handler"
     },
     list = {
       name        = "list-orders"
-      description = "Lista pedidos com paginação"
+      description = "List orders with pagination"
       handler     = ".build/order/useCases/list/handler.handler"
     },
     update = {
       name        = "update-order"
-      description = "Atualiza um pedido existente"
+      description = "Update an existing order"
       handler     = ".build/order/useCases/update/handler.handler"
     },
     update_status = {
       name        = "update-order-status"
-      description = "Atualiza o status de um pedido existente"
+      description = "Update the status of an existing order"
       handler     = ".build/order/useCases/update_status/handler.handler"
     },
     delete = {
       name        = "delete-order"
-      description = "Remove um pedido"
+      description = "Remove an order"
       handler     = ".build/order/useCases/delete/handler.handler"
     }
   }

@@ -48,3 +48,8 @@ variable "lambda_layers" {
   description = "Lambda Layers ARN"
   type        = list(string)
 }
+
+variable "database_url" {
+  description = "Database URL"
+  type        = string
+}

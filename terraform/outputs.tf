@@ -1,23 +1,23 @@
 output "vpc_id" {
-  value = aws_vpc.network.id
+  value = module.network.vpc_id
 }
 
 output "public_subnet_ids" {
-  value = aws_subnet.public_subnet_fast_food[*].id
+  value = module.network.public_subnet_ids
 }
 
 output "private_subnet_ids" {
-  value = aws_subnet.private_subnet_fast_food[*].id
+  value = module.network.private_subnet_ids
 }
 
 output "api_gateway_url" {
-  value = aws_apigatewayv2_api.api.api_endpoint
+  value = module.api_gateway.api_endpoint
 }
 
 output "api_gateway_id" {
-  value = aws_apigatewayv2_api.api.id
+  value = module.api_gateway.api_id
 }
 
 output "api_gateway_execution_arn" {
-  value = aws_apigatewayv2_api.api.execution_arn
+  value = module.api_gateway.api_execution_arn
 }

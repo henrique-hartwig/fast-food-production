@@ -3,7 +3,7 @@
 node_modules/
 .build/
 dist/
-
+*.js*
 
 # Terraform
 terraform/.terraform/

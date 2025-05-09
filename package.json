@@ -2,6 +2,7 @@
   "name": "fast-food-orders",
   "version": "0.1.0",
   "type": "module",
+  "module": "ES2020",
   "scripts": {
     "build": "tsc",
     "test": "jest",

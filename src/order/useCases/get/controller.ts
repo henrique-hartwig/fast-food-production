@@ -8,7 +8,7 @@ const GetOrderSchema = z.object({
 export type GetOrderRequest = z.infer<typeof GetOrderSchema>;
 
 export class GetOrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
 
   async handle(request: GetOrderRequest) {
     try {
@@ -16,33 +16,15 @@ export class GetOrderController {
 
       const order = await this.orderService.getOrderById(
         validatedData.id
-      );
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Order retrieved successfully',
-          data: order,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (order.error) {
+        throw Error(order.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return order;
+    } catch (error) {
+      throw error;
     }
   }
 }

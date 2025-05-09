@@ -7,12 +7,9 @@ import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const prismaClient = new PrismaClient();
-  console.log('prismaClient', prismaClient);
-  console.log('vai começar a lambda');
 
   try {
-    console.log('event', event);
-    if (!event.body) {
+    if (!event.body || Object.keys(JSON.parse(event.body)).length === 0) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
@@ -21,25 +18,39 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     }
 
     const requestData = JSON.parse(event.body);
-    console.log('requestData', requestData)
 
     const orderRepository = new DbOrderRepository(prismaClient);
     const orderService = new OrderService(orderRepository);
     const orderController = new CreateOrderController(orderService);
 
-    const result = await orderController.handle(requestData);
-    console.log('result', result)
+    const order = await orderController.handle(requestData);
+
     return {
       statusCode: 201,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result)
+      body: JSON.stringify({
+        message: 'Order created successfully',
+        data: order,
+      }),
     };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error creating order', error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Validation error',
+          details: error.errors,
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Internal server error' })
+      body: JSON.stringify({ message: 'Internal server error' }),
     };
   }
 }; 

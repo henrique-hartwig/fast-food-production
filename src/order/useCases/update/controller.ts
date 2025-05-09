@@ -8,7 +8,9 @@ const OrderItemSchema = z.object({
 
 const UpdateOrderSchema = z.object({
   id: z.number().int().positive(),
-  items: z.array(OrderItemSchema).nonempty(),
+  items: z.object({
+    items: z.array(OrderItemSchema).nonempty()
+  }),
   total: z.number().positive(),
   userId: z.number().int().positive().optional()
 });
@@ -27,33 +29,14 @@ export class UpdateOrderController {
         { items: validatedData.items },
         validatedData.total,
         validatedData.userId
-      );
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Order updated successfully',
-          data: order,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (order.error) {
+        throw order.error;
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+      return order;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

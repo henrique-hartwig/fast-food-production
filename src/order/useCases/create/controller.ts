@@ -7,7 +7,7 @@ const OrderItemSchema = z.object({
 });
 
 const CreateOrderSchema = z.object({
-  items: z.array(OrderItemSchema).nonempty(),
+  items: z.record(z.string(), z.array(OrderItemSchema).nonempty()),
   total: z.number().positive(),
   userId: z.number().int().positive().optional()
 });
@@ -15,7 +15,7 @@ const CreateOrderSchema = z.object({
 export type CreateOrderRequest = z.infer<typeof CreateOrderSchema>;
 
 export class CreateOrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
 
   async handle(request: CreateOrderRequest) {
     try {
@@ -25,33 +25,15 @@ export class CreateOrderController {
         { items: validatedData.items },
         validatedData.total,
         validatedData.userId,
-      );
+      ) as any;
 
-      return {
-        statusCode: 201,
-        body: {
-          message: 'Order created successfully',
-          data: order,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (order.error) {
+        throw Error(order.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return order;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

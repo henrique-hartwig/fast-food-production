@@ -17,33 +17,15 @@ export class DeleteOrderController {
 
       const order = await this.orderService.deleteOrder(
         validatedData.id
-      );
+      ) as any;
 
-      return {
-        statusCode: 201,
-        body: {
-          message: 'Order deleted successfully',
-          data: order,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (order.error) {
+        throw Error(order.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return order;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

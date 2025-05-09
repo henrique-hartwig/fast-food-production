@@ -3,8 +3,8 @@ import { OrderService } from '../../domain/service';
 
 
 const ListOrdersSchema = z.object({
-  limit: z.number().int().positive().optional(),
-  offset: z.number().int().positive().optional()
+  limit: z.number().int().positive(),
+  offset: z.number().int().nonnegative()
 });
 
 export type ListOrdersRequest = z.infer<typeof ListOrdersSchema>;
@@ -17,35 +17,17 @@ export class ListOrdersController {
       const validatedData = ListOrdersSchema.parse(request);
 
       const orders = await this.orderService.listOrders(
-        validatedData.limit ?? 10,
-        validatedData.offset ?? 0
-      );
+        validatedData.limit,
+        validatedData.offset
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Orders retrieved successfully',
-          data: orders,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (orders.error) {
+        throw Error(orders.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return orders;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

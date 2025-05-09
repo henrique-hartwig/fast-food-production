@@ -4,7 +4,7 @@ export interface OrderItem {
 }
 
 export interface Items {
-  items: OrderItem[];
+  items: Record<string, OrderItem[]>;
 }
 
 export enum OrderStatus {

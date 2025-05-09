@@ -9,7 +9,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const prismaClient = getPrismaClient();
 
   try {
-    if (!event.pathParameters?.id || !event.body) {
+    if (!event.pathParameters?.id || !event.body || Object.keys(JSON.parse(event.body)).length === 0) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
@@ -32,10 +32,22 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result)
+      body: JSON.stringify({ 
+        message: 'Order status updated successfully',
+        data: result })
     };
-  } catch (error) {
+  } catch (error: any) {
+    console.log('error', error)
     logger.error(`Error getting order`, error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Validation error', details: error.errors })
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },

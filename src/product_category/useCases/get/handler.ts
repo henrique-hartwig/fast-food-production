@@ -24,6 +24,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const productCategoryController = new GetProductCategoryController(productCategoryService);
 
     const result = await productCategoryController.handle({ id: Number(productCategoryId) });
+    console.log('result', result)
 
     return {
       statusCode: 201,

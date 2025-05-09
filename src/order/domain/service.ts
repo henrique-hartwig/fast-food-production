@@ -14,7 +14,15 @@ export class OrderService {
   }
 
   async updateOrder(id: number, items: Items, total: number, userId?: number): Promise<Order> {
-    const order = new Order(id, items, total, OrderStatus.RECEIVED, userId);
+    const order = await this.order.findById(id);
+    if (!order) {
+      throw new Error('Order not found');
+    }
+    order.items = items;
+    order.total = total;
+    if (userId) {
+      order.userId = userId;
+    }
     return this.order.update(order);
   }
 

@@ -16,15 +16,14 @@ export class GetProductCategoryController {
 
       const productCategory = await this.productCategoryService.getProductCategoryById(
         validatedData.id
-      );
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Product Category retrieved successfully',
-          data: productCategory,
-        },
-      };
+      if (productCategory.error) {
+        throw Error(productCategory.error);
+      }
+
+      return productCategory;
+
     } catch (error) {
       if (error instanceof z.ZodError) {
         return {

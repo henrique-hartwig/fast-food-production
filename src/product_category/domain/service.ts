@@ -14,8 +14,13 @@ export class ProductCategoryService {
   }
 
   async updateProductCategory(id: number, name: string, description: string): Promise<ProductCategory> {
-    const productCategory = new ProductCategory(id, name, description);
-    return this.productCategory.update(productCategory);
+    const productCategory = await this.productCategory.findById(id);
+    if (!productCategory) {
+      throw new Error('Product category not found');
+    }
+
+    const updatedProductCategory = new ProductCategory(id, name, description);
+    return this.productCategory.update(updatedProductCategory);
   }
 
   async deleteProductCategory(id: number): Promise<boolean> {

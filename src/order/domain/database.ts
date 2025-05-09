@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Order, OrderStatus, Items } from './entity';
 import { OrderRepository } from './repository';
 
-function parseItems(items: any): Items | null {
+export function parseItems(items: any): Items | null {
   if (!items) return null;
   if (typeof items === 'string') {
     try {
@@ -27,7 +27,7 @@ export class DbOrderRepository implements OrderRepository {
         items: order.items ? JSON.parse(JSON.stringify(order.items)) : { items: [] },
         total: order.total,
         status: order.status,
-        userId: order.userId ?? undefined,
+        userId: order.userId,
       },
     });
 
@@ -36,7 +36,7 @@ export class DbOrderRepository implements OrderRepository {
       parseItems(orderData.items),
       orderData.total,
       orderData.status as OrderStatus,
-      orderData.userId ?? undefined,
+      orderData.userId,
     );
   }
 
@@ -54,7 +54,7 @@ export class DbOrderRepository implements OrderRepository {
       parseItems(orderData.items),
       orderData.total,
       orderData.status as OrderStatus,
-      orderData.userId ?? undefined,
+      orderData.userId,
     );
   }
 
@@ -65,7 +65,7 @@ export class DbOrderRepository implements OrderRepository {
         items: order.items ? JSON.parse(JSON.stringify(order.items)) : { items: [] },
         total: order.total,
         status: order.status,
-        userId: order.userId ?? undefined,
+        userId: order.userId,
       },
     });
 
@@ -74,7 +74,7 @@ export class DbOrderRepository implements OrderRepository {
       parseItems(updatedOrder.items),
       updatedOrder.total,
       updatedOrder.status as OrderStatus,
-      updatedOrder.userId ?? undefined,
+      updatedOrder.userId,
     );
   }
 
@@ -96,7 +96,7 @@ export class DbOrderRepository implements OrderRepository {
         parseItems(orderData.items),
         orderData.total,
         orderData.status as OrderStatus,
-        orderData.userId ?? undefined,
+        orderData.userId,
       ),
     );
   }

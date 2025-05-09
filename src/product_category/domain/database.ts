@@ -9,13 +9,19 @@ export class DbProductCategoryRepository implements ProductCategoryRepository {
     this.prisma = prisma;
   }
 
-  async create(productCategory: ProductCategory): Promise<void> {
-    await this.prisma.productCategory.create({
+  async create(productCategory: ProductCategory): Promise<ProductCategory> {
+    const productCategoryData = await this.prisma.productCategory.create({
       data: {
         name: productCategory.name,
         description: productCategory.description,
       },
     });
+
+    return new ProductCategory(
+      productCategoryData.id,
+      productCategoryData.name,
+      productCategoryData.description,
+    );
   }
 
   async findById(id: number): Promise<ProductCategory | null> {
@@ -27,23 +33,34 @@ export class DbProductCategoryRepository implements ProductCategoryRepository {
       return null;
     }
 
-    return new ProductCategory(productCategoryData.id, productCategoryData.name, productCategoryData.description);
+    return new ProductCategory(
+      productCategoryData.id,
+      productCategoryData.name,
+      productCategoryData.description,
+    );
   }
 
-  async update(productCategory: ProductCategory): Promise<void> {
-    await this.prisma.productCategory.update({
+  async update(productCategory: ProductCategory): Promise<ProductCategory> {
+    const productCategoryData = await this.prisma.productCategory.update({
       where: { id: productCategory.id },
       data: {
         name: productCategory.name,
         description: productCategory.description,
       },
     });
+
+    return new ProductCategory(
+      productCategoryData.id,
+      productCategoryData.name,
+      productCategoryData.description,
+    );
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number): Promise<boolean> {
     await this.prisma.productCategory.delete({
       where: { id },
     });
+    return true;
   }
 
   async list(limit: number, offset: number): Promise<ProductCategory[]> {

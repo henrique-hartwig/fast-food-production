@@ -37,8 +37,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         data: result })
     };
   } catch (error: any) {
-    console.log('error', error)
-    logger.error(`Error getting order`, error);
+    logger.error(`Error updating order status`, error);
 
     if (error?.name === 'ZodError') {
       return {

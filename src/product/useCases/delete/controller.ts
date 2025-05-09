@@ -16,33 +16,15 @@ export class DeleteProductController {
 
       const product = await this.productService.deleteProduct(
         validatedData.id
-      );
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Product deleted successfully',
-          data: product,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (product.error) {
+        throw product.error;
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return product;
+    } catch (error) {
+      throw error;
     }
   }
 }

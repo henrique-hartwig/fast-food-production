@@ -34,10 +34,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       body: JSON.stringify(result)
     };
   } catch (error: any) {
-    logger.error(`Error getting order`, error);
+    logger.error(`Error getting orders`, error);
 
     if (error?.name === 'ZodError') {
-      console.log('error', error)
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },

@@ -20,33 +20,15 @@ export class UpdateProductCategoryController {
         validatedData.id,
         validatedData.name,
         validatedData.description
-      );
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Product Category updated successfully',
-          data: productCategory,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (productCategory.error) {
+        throw Error(productCategory.error);
       }
 
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+      return productCategory;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

@@ -22,33 +22,15 @@ export class CreateProductController {
         validatedData.description,
         validatedData.price,
         validatedData.categoryId
-      );
+      ) as any;
 
-      return {
-        statusCode: 201,
-        body: {
-          message: 'Product created successfully',
-          data: product,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (product.error) {
+        throw Error(product.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return product;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

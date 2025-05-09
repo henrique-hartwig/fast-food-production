@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { ProductService } from '../../domain/service';
 
 const ListProductsSchema = z.object({
-  limit: z.number().int().positive().optional(),
-  offset: z.number().int().positive().optional()
+  limit: z.number().int().positive(),
+  offset: z.number().int().nonnegative()
 });
 
 export type ListProductsRequest = z.infer<typeof ListProductsSchema>;
@@ -16,35 +16,18 @@ export class ListProductsController {
       const validatedData = ListProductsSchema.parse(request);
 
       const products = await this.productService.listProducts(
-        validatedData.limit ?? 10,
-        validatedData.offset ?? 0
-      );
+        validatedData.limit,
+        validatedData.offset
+      ) as any;
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'Product list retrieved successfully',
-          data: products,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (products.error) {
+        throw products.error;
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return products;
+
+    } catch (error: any) {
+      throw error;
     }
   }
 }

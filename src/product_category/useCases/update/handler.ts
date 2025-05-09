@@ -9,29 +9,49 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const prismaClient = getPrismaClient();
 
   try {
-    if (!event.body) {
+    if (!event.pathParameters?.id || !event.body) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Request body is required' })
+        body: JSON.stringify({ message: 'Product category ID and body are required' })
       };
     }
 
+    const productCategoryId = event.pathParameters?.id;
     const requestData = JSON.parse(event.body);
 
     const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
     const productCategoryService = new ProductCategoryService(productCategoryRepository);
     const productCategoryController = new UpdateProductCategoryController(productCategoryService);
 
-    const result = await productCategoryController.handle(requestData);
+    const result = await productCategoryController.handle({
+      id: Number(productCategoryId),
+      name: requestData.name,
+      description: requestData.description
+    });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result)
+      body: JSON.stringify({
+        message: 'Product category updated successfully',
+        data: result,
+      }),
     };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error updating product category', error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Validation error',
+          details: error.errors,
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },

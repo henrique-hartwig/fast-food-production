@@ -4,7 +4,7 @@ import { ProductCategoryRepository } from './repository';
 export class ProductCategoryService {
   constructor(private productCategory: ProductCategoryRepository) {}
 
-  async createProductCategory(name: string, description: string): Promise<void> {
+  async createProductCategory(name: string, description: string): Promise<ProductCategory> {
     const productCategory = new ProductCategory(Date.now(), name, description);
     return this.productCategory.create(productCategory);
   }
@@ -13,12 +13,12 @@ export class ProductCategoryService {
     return this.productCategory.findById(id);
   }
 
-  async updateProductCategory(id: number, name: string, description: string): Promise<void> {
+  async updateProductCategory(id: number, name: string, description: string): Promise<ProductCategory> {
     const productCategory = new ProductCategory(id, name, description);
     return this.productCategory.update(productCategory);
   }
 
-  async deleteProductCategory(id: number): Promise<void> {
+  async deleteProductCategory(id: number): Promise<boolean> {
     return this.productCategory.delete(id);
   }
 

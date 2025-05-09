@@ -34,7 +34,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }),
     };
   } catch (error: any) {
-    logger.error(`Error getting order`, error);
+    logger.error(`Error deleting order`, error);
 
     if (error?.name === 'ZodError') {
       return {

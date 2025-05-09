@@ -9,7 +9,7 @@ const CreateProductCategorySchema = z.object({
 export type CreateProductCategoryRequest = z.infer<typeof CreateProductCategorySchema>;
 
 export class CreateProductCategoryController {
-  constructor(private productCategoryService: ProductCategoryService) {}
+  constructor(private productCategoryService: ProductCategoryService) { }
 
   async handle(request: CreateProductCategoryRequest) {
     try {
@@ -18,33 +18,15 @@ export class CreateProductCategoryController {
       const productCategory = await this.productCategoryService.createProductCategory(
         validatedData.name,
         validatedData.description
-      );
+      ) as any;
 
-      return {
-        statusCode: 201,
-        body: {
-          message: 'Product Category created successfully',
-          data: productCategory,
-        },
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            message: 'Validation error',
-            details: error.errors,
-          },
-        };
+      if (productCategory.error) {
+        throw Error(productCategory.error);
       }
-      
-      return {
-        statusCode: 500,
-        body: {
-          message: 'Internal server error',
-          details: error,
-        },
-      };
+
+      return productCategory;
+    } catch (error: any) {
+      throw error;
     }
   }
 }

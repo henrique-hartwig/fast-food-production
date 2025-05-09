@@ -9,8 +9,8 @@ export class DbProductRepository implements ProductRepository {
     this.prisma = prisma;
   }
 
-  async create(product: Product): Promise<void> {
-    await this.prisma.product.create({
+  async create(product: Product): Promise<Product> {
+    const productData = await this.prisma.product.create({
       data: {
         name: product.name,
         description: product.description,
@@ -18,6 +18,14 @@ export class DbProductRepository implements ProductRepository {
         categoryId: product.categoryId,
       },
     });
+
+    return new Product(
+      productData.id,
+      productData.name,
+      productData.description,
+      productData.price,
+      productData.categoryId,
+    );
   }
 
   async findById(id: number): Promise<Product | null> {
@@ -53,17 +61,26 @@ export class DbProductRepository implements ProductRepository {
     );
   }
 
-  async update(product: Product): Promise<void> {
-    await this.prisma.product.update({
+  async update(product: Product): Promise<Product> {
+    const productData = await this.prisma.product.update({
       where: { id: product.id },
       data: product,
     });
+
+    return new Product(
+      productData.id,
+      productData.name,
+      productData.description,
+      productData.price,
+      productData.categoryId,
+    );
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number): Promise<boolean> {
     await this.prisma.product.delete({
       where: { id },
     });
+    return true;
   }
 
   async list(limit: number, offset: number): Promise<Product[]> {

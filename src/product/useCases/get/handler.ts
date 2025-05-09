@@ -13,7 +13,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Request body is required' })
+        body: JSON.stringify({ message: 'Product ID is required' })
       };
     }
 
@@ -26,12 +26,27 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const result = await productController.handle({ id: Number(productId) });
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result)
+      body: JSON.stringify({
+        message: 'Product retrieved successfully',
+        data: result,
+      }),
     };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error getting product', error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Validation error',
+          details: error.errors,
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },

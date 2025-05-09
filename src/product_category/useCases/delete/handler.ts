@@ -9,29 +9,44 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const prismaClient = getPrismaClient();
 
   try {
-    if (!event.body) {
+    if (!event.pathParameters?.id) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Request body is required' })
+        body: JSON.stringify({ message: 'Product category ID is required' })
       };
-    }
+    } 
 
-    const requestData = JSON.parse(event.body);
+    const productCategoryId = event.pathParameters?.id;
 
     const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
     const productCategoryService = new ProductCategoryService(productCategoryRepository);
     const productCategoryController = new DeleteProductCategoryController(productCategoryService);
 
-    const result = await productCategoryController.handle(requestData);
+    const result = await productCategoryController.handle({ id: Number(productCategoryId) });
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result)
+      body: JSON.stringify({
+        message: 'Product category deleted successfully',
+        data: result,
+      }),
     };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error deleting product category', error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Validation error',
+          details: error.errors,
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },

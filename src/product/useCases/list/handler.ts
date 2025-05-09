@@ -9,15 +9,18 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const prismaClient = getPrismaClient();
 
   try {
-    if (!event.body) {
+    if (!event.queryStringParameters?.limit || !event.queryStringParameters?.offset) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Request body is required' })
+        body: JSON.stringify({ message: 'Query parameters are required' })
       };
     }
 
-    const requestData = JSON.parse(event.body);
+    const requestData = {
+      limit: parseInt(event.queryStringParameters?.limit),
+      offset: parseInt(event.queryStringParameters?.offset)
+    };
 
     const productsRepository = new DbProductRepository(prismaClient);
     const productService = new ProductService(productsRepository);
@@ -30,8 +33,20 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(result)
     };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error listing products', error);
+
+    if (error?.name === 'ZodError') {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Validation error',
+          details: error.errors,
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },

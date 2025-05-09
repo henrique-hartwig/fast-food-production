@@ -15,7 +15,6 @@ export class UpdateProductCategoryController {
   async handle(request: UpdateProductCategoryRequest) {
     try {
       const validatedData = UpdateProductCategorySchema.parse(request);
-
       const productCategory = await this.productCategoryService.updateProductCategory(
         validatedData.id,
         validatedData.name,

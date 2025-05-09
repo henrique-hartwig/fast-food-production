@@ -32,7 +32,7 @@ export class UpdateOrderController {
       ) as any;
 
       if (order.error) {
-        throw order.error;
+        throw Error(order.error);
       }
       return order;
     } catch (error: any) {

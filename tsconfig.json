@@ -8,10 +8,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": ".build",
-    "rootDir": "./",
+    "rootDir": "./src",
     "sourceMap": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "../tests/**/*"],
   "exclude": ["node_modules", ".serverless", ".build"]
 } 

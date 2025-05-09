@@ -1,7 +1,7 @@
 import { UpdateProductCategoryController } from '../../../../../src/product_category/useCases/update/controller';
 import { ProductCategoryService } from '../../../../../src/product_category/domain/service';
 
-describe.only('UpdateProductCategoryController', () => {
+describe('UpdateProductCategoryController', () => {
     let controller: UpdateProductCategoryController;
     let service: jest.Mocked<ProductCategoryService>;
 

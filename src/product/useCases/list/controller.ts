@@ -21,7 +21,7 @@ export class ListProductsController {
       ) as any;
 
       if (products.error) {
-        throw products.error;
+        throw Error(products.error);
       }
 
       return products;

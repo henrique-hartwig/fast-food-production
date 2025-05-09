@@ -19,7 +19,7 @@ export class DeleteProductCategoryController {
       ) as any;
 
       if (productCategory.error) {
-        throw productCategory.error;
+        throw Error(productCategory.error);
       }
 
       return productCategory;

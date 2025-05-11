@@ -1,25 +1,25 @@
-import { DeleteOrderController } from '../../../../../src/order/useCases/delete/controller';
-import { OrderService } from '../../../../../src/order/domain/service';
+import { DeleteMealController } from '../../../../../src/meal/useCases/delete/controller';
+import { MealService } from '../../../../../src/meal/domain/service';
 
-describe('DeleteOrderController', () => {
-  let controller: DeleteOrderController;
-  let service: jest.Mocked<OrderService>;
+describe('DeleteMealController', () => {
+  let controller: DeleteMealController;
+  let service: jest.Mocked<MealService>;
 
   beforeEach(() => {
     service = {
-      deleteOrder: jest.fn(),
+      deleteMeal: jest.fn(),
     } as any;
-    controller = new DeleteOrderController(service);
+    controller = new DeleteMealController(service);
   });
 
-  it('should delete the order', async () => {
+  it('should delete the meal', async () => {
     const request = { id: 1 };
-    service.deleteOrder.mockResolvedValue({ id: 1 } as any);
+    service.deleteMeal.mockResolvedValue({ id: 1 } as any);
 
     const result = await controller.handle(request as any);
 
     expect(result).toEqual({ id: 1 } as any);
-    expect(service.deleteOrder).toHaveBeenCalledWith(1);
+    expect(service.deleteMeal).toHaveBeenCalledWith(1);
   });
 
   it('should throw validation error', async () => {
@@ -30,14 +30,14 @@ describe('DeleteOrderController', () => {
 
   it('should throw error if the service returns an error', async () => {
     const request = { id: 1 };
-    service.deleteOrder.mockResolvedValue({ error: 'Service error' } as any);
+    service.deleteMeal.mockResolvedValue({ error: 'Service error' } as any);
 
     await expect(controller.handle(request as any)).rejects.toThrow('Service error');
   });
 
   it('should throw unexpected error', async () => {
     const request = { id: 1 };
-    service.deleteOrder.mockRejectedValue(new Error('Unexpected error'));
+    service.deleteMeal.mockRejectedValue(new Error('Unexpected error'));
 
     await expect(controller.handle(request as any)).rejects.toThrow('Unexpected error');
   });

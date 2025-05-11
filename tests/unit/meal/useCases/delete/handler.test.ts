@@ -1,4 +1,4 @@
-import { handler } from '../../../../../src/product_category/useCases/get/handler';
+import { handler } from '../../../../../src/meal/useCases/delete/handler';
 import { PrismaClient } from '@prisma/client';
 
 
@@ -8,15 +8,15 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-describe('Get Product Category Lambda', () => {
-  let mockProductCategoryGet: jest.Mock;
+describe('Delete Meal Lambda', () => {
+  let mockMealDelete: jest.Mock;
 
   beforeEach(() => {
-    mockProductCategoryGet = jest.fn();
+    mockMealDelete = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
-      productCategory: {
-        findUnique: mockProductCategoryGet,
+      meal: {
+        delete: mockMealDelete,
       },
       $disconnect: jest.fn(),
     }));
@@ -24,31 +24,26 @@ describe('Get Product Category Lambda', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 200 if find the product category', async () => {
+  it('should return 200 if a valid meal is deleted', async () => {
     const event = {
       pathParameters: {
         id: 123,
       },
     } as any;
 
-    mockProductCategoryGet.mockResolvedValue({
-      id: 123,
-      name: 'Category 1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    mockMealDelete.mockResolvedValue(true);
 
     const result = await handler(event);
 
     expect(result.statusCode).toBe(200);
     const body = JSON.parse(result.body);
-    expect(body.data).toMatchObject({
-      id: 123,
-      name: 'Category 1',
-    });
+    expect(body.message).toBe('Meal deleted successfully');
+    expect(body.data).toBeTruthy();
+    expect(mockMealDelete).toHaveBeenCalledTimes(1);
+    expect(mockMealDelete).toHaveBeenCalledWith({ where: { id: 123 } });
   });
 
-  it('should return 400 if productCategoryId is not sent', async () => {
+  it('should return 400 if mealId is not sent', async () => {
     const event = {
       pathParameters: {
         id: null,
@@ -59,8 +54,8 @@ describe('Get Product Category Lambda', () => {
 
     expect(result.statusCode).toBe(400);
     const body = JSON.parse(result.body);
-    expect(body.message).toBe('Product category ID is required');
-    expect(mockProductCategoryGet).not.toHaveBeenCalled();
+    expect(body.message).toBe('Meal ID is required');
+    expect(mockMealDelete).not.toHaveBeenCalled();
   });
 
   it('should return 500 if an unexpected error occurs', async () => {
@@ -70,14 +65,14 @@ describe('Get Product Category Lambda', () => {
       },
     } as any;
 
-    mockProductCategoryGet.mockRejectedValue(new Error('Not found'));
+    mockMealDelete.mockRejectedValue(new Error('Not found'));
 
     const result = await handler(event);
 
     expect(result.statusCode).toBe(500);
     const body = JSON.parse(result.body);
     expect(body.message).toBe('Internal server error');
-    expect(mockProductCategoryGet).toHaveBeenCalledTimes(1);
-    expect(mockProductCategoryGet).toHaveBeenCalledWith({ where: { id: 999 } });
+    expect(mockMealDelete).toHaveBeenCalledTimes(1);
+    expect(mockMealDelete).toHaveBeenCalledWith({ where: { id: 999 } });
   });
 });

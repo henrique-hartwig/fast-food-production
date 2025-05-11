@@ -1,25 +1,25 @@
-import { GetProductController } from '../../../../../src/product/useCases/get/controller';
-import { ProductService } from '../../../../../src/product/domain/service';
+import { GetMealController } from '../../../../../src/meal/useCases/get/controller';
+import { MealService } from '../../../../../src/meal/domain/service';
 
-describe('GetProductController', () => {
-  let controller: GetProductController;
-  let service: jest.Mocked<ProductService>;
+describe('GetMealController', () => {
+  let controller: GetMealController;
+  let service: jest.Mocked<MealService>;
 
   beforeEach(() => {
     service = {
-      getProductById: jest.fn(),
+      getMealById: jest.fn(),
     } as any;
-    controller = new GetProductController(service);
+    controller = new GetMealController(service);
   });
 
-  it('should get the product', async () => {
+  it('should get the meal', async () => {
     const request = { id: 1 };
-    service.getProductById.mockResolvedValue({ id: 1 } as any);
+    service.getMealById.mockResolvedValue({ id: 1 } as any);
 
     const result = await controller.handle(request as any);
 
     expect(result).toEqual({ id: 1 } as any);
-    expect(service.getProductById).toHaveBeenCalledWith(1);
+    expect(service.getMealById).toHaveBeenCalledWith(1);
   });
 
   it('should throw validation error', async () => {
@@ -30,14 +30,14 @@ describe('GetProductController', () => {
 
   it('should throw error if the service returns an error', async () => {
     const request = { id: 1 };
-    service.getProductById.mockResolvedValue({ error: 'Service error' } as any);
+    service.getMealById.mockResolvedValue({ error: 'Service error' } as any);
 
     await expect(controller.handle(request as any)).rejects.toThrow('Service error');
   });
 
   it('should throw unexpected error', async () => {
     const request = { id: 1 };
-    service.getProductById.mockRejectedValue(new Error('Unexpected error'));
+    service.getMealById.mockRejectedValue(new Error('Unexpected error'));
 
     await expect(controller.handle(request as any)).rejects.toThrow('Unexpected error');
   });

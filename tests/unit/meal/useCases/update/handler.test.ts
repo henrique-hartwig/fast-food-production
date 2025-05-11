@@ -1,4 +1,4 @@
-import { handler } from '../../../../../src/product_category/useCases/update/handler';
+import { handler } from '../../../../../src/meal/useCases/update/handler';
 import { PrismaClient } from '@prisma/client';
 
 
@@ -8,18 +8,18 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-describe('Update Product Category Lambda', () => {
-  let mockProductCategoryUpdate: jest.Mock;
-  let mockProductCategoryFindUnique: jest.Mock;
+describe('Update Meal Lambda', () => {
+  let mockMealUpdate: jest.Mock;
+  let mockMealFindUnique: jest.Mock;
 
   beforeEach(() => {
-    mockProductCategoryUpdate = jest.fn();
-    mockProductCategoryFindUnique = jest.fn();
+    mockMealUpdate = jest.fn();
+    mockMealFindUnique = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
-      productCategory: {
-        update: mockProductCategoryUpdate,
-        findUnique: mockProductCategoryFindUnique,
+      meal: {
+        update: mockMealUpdate,
+        findUnique: mockMealFindUnique,
       },
       $disconnect: jest.fn(),
     }));
@@ -27,27 +27,24 @@ describe('Update Product Category Lambda', () => {
     jest.clearAllMocks();
   });
 
-  it('should update the product category', async () => {
+  it('should update the meal', async () => {
     const event = {
       pathParameters: { id: 123 },
       body: JSON.stringify({
-        name: 'Product Category 2',
-        description: 'Description 2',
+        items: [{ id: 1, quantity: 1 }],
       }),
     } as any;
 
-    mockProductCategoryFindUnique.mockResolvedValue({
+    mockMealFindUnique.mockResolvedValue({
       id: 123,
-      name: 'Product Category 1',
-      description: 'Description 1',
+      items: [{ id: 1, quantity: 1 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    mockProductCategoryUpdate.mockResolvedValue({
+    mockMealUpdate.mockResolvedValue({
       id: 123,
-      name: 'Product Category 2',
-      description: 'Description 2',
+      items: [{ id: 1, quantity: 1 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -58,8 +55,7 @@ describe('Update Product Category Lambda', () => {
     const body = JSON.parse(result.body);
     expect(body.data).toMatchObject({
       id: 123,
-      name: 'Product Category 2',
-      description: 'Description 2',
+      items: [{ id: 1, quantity: 1 }],
     });
   });
 
@@ -72,15 +68,14 @@ describe('Update Product Category Lambda', () => {
 
     expect(result.statusCode).toBe(400);
     const body = JSON.parse(result.body);
-    expect(body.message).toBe('Product category ID and body are required');
-    expect(mockProductCategoryUpdate).not.toHaveBeenCalled();
+    expect(body.message).toBe('Meal ID and body are required');
+    expect(mockMealUpdate).not.toHaveBeenCalled();
   });
 
-  it('should return 400 if product category id is not provided in path', async () => {
+  it('should return 400 if meal id is not provided in path', async () => {
     const event = {
       body: JSON.stringify({
-        name: 'Product Category 2',
-        description: 'Description 2',
+        items: [{ id: 1, quantity: 1 }],
       })
     } as any;
 
@@ -88,20 +83,19 @@ describe('Update Product Category Lambda', () => {
 
     expect(result.statusCode).toBe(400);
     const body = JSON.parse(result.body);
-    expect(body.message).toBe('Product category ID and body are required');
-    expect(mockProductCategoryUpdate).not.toHaveBeenCalled();
+    expect(body.message).toBe('Meal ID and body are required');
+    expect(mockMealUpdate).not.toHaveBeenCalled();
   });
 
   it('should return 500 for generic errors', async () => {
     const event = {
       pathParameters: { id: 123 },
       body: JSON.stringify({
-        name: 'Product Category 2',
-        description: 'Description 2',
+        items: [{ id: 1, quantity: 1 }],
       }),
     } as any;
 
-    mockProductCategoryUpdate.mockRejectedValueOnce(new Error('Generic error'));
+    mockMealUpdate.mockRejectedValueOnce(new Error('Generic error'));
 
     const result = await handler(event);
 

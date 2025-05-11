@@ -1,4 +1,4 @@
-import { handler } from '../../../../../src/order/useCases/get/handler';
+import { handler } from '../../../../../src/meal/useCases/get/handler';
 import { PrismaClient } from '@prisma/client';
 
 
@@ -8,15 +8,15 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-describe('Get Order Lambda', () => {
-  let mockOrderGet: jest.Mock;
+describe('Get Meal Lambda', () => {
+  let mockMealGet: jest.Mock;
 
   beforeEach(() => {
-    mockOrderGet = jest.fn();
+    mockMealGet = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
-      order: {
-        findUnique: mockOrderGet,
+      meal: {
+        findUnique: mockMealGet,
       },
       $disconnect: jest.fn(),
     }));
@@ -24,19 +24,16 @@ describe('Get Order Lambda', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 200 if find the order', async () => {
+  it('should return 200 if find the meal', async () => {
     const event = {
       pathParameters: {
         id: 123,
       },
     } as any;
 
-    mockOrderGet.mockResolvedValue({
+    mockMealGet.mockResolvedValue({
       id: 123,
-      status: 'received',
-      userId: 1,
-      items: [{ id: 1, quantity: 2 }],
-      total: 50.0,
+      items: [{ id: 1, quantity: 1 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -47,16 +44,11 @@ describe('Get Order Lambda', () => {
     const body = JSON.parse(result.body);
     expect(body.data).toMatchObject({
       id: 123,
-      status: 'received',
-      userId: 1,
-      items: [{ id: 1, quantity: 2 }],
-      total: 50.0
+      items: [{ id: 1, quantity: 1 }],
     });
-    expect(mockOrderGet).toHaveBeenCalledTimes(1);
-    expect(mockOrderGet).toHaveBeenCalledWith({ where: { id: 123 } });
   });
 
-  it('should return 400 if orderId is not sent', async () => {
+  it('should return 400 if mealId is not sent', async () => {
     const event = {
       pathParameters: {
         id: null,
@@ -67,8 +59,23 @@ describe('Get Order Lambda', () => {
 
     expect(result.statusCode).toBe(400);
     const body = JSON.parse(result.body);
-    expect(body.message).toBe('Order ID is required');
-    expect(mockOrderGet).not.toHaveBeenCalled();
+    expect(body.message).toBe('Meal ID is required');
+    expect(mockMealGet).not.toHaveBeenCalled();
+  });
+
+  it('should return 400 if mealId is not a number', async () => {
+    const event = {
+      pathParameters: {
+        id: 'invalid',
+      },
+    } as any;
+
+    const result = await handler(event);
+
+    expect(result.statusCode).toBe(400);
+    const body = JSON.parse(result.body);
+    expect(body.message).toBe('Validation error');
+    expect(mockMealGet).not.toHaveBeenCalled();
   });
 
   it('should return 500 if an unexpected error occurs', async () => {
@@ -78,14 +85,14 @@ describe('Get Order Lambda', () => {
       },
     } as any;
 
-    mockOrderGet.mockRejectedValue(new Error('Not found'));
+    mockMealGet.mockRejectedValue(new Error('Not found'));
 
     const result = await handler(event);
 
     expect(result.statusCode).toBe(500);
     const body = JSON.parse(result.body);
     expect(body.message).toBe('Internal server error');
-    expect(mockOrderGet).toHaveBeenCalledTimes(1);
-    expect(mockOrderGet).toHaveBeenCalledWith({ where: { id: 999 } });
+    expect(mockMealGet).toHaveBeenCalledTimes(1);
+    expect(mockMealGet).toHaveBeenCalledWith({ where: { id: 999 } });
   });
 });

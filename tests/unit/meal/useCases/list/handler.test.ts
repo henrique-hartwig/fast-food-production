@@ -1,4 +1,4 @@
-import { handler } from '../../../../../src/product/useCases/list/handler';
+import { handler } from '../../../../../src/meal/useCases/list/handler';
 import { PrismaClient } from '@prisma/client';
 
 
@@ -8,15 +8,15 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-describe('List Product Lambda', () => {
-  let mockProductList: jest.Mock;
+describe('List Meal Lambda', () => {
+  let mockMealList: jest.Mock;
 
   beforeEach(() => {
-    mockProductList = jest.fn();
+    mockMealList = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
-      product: {
-        findMany: mockProductList,
+      meal: {
+        findMany: mockMealList,
       },
       $disconnect: jest.fn(),
     }));
@@ -32,11 +32,9 @@ describe('List Product Lambda', () => {
       },
     } as any;
 
-    mockProductList.mockResolvedValue([{
+    mockMealList.mockResolvedValue([{
       id: 123,
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 10.0,
+      items: [{ id: 1, quantity: 2 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     }]);
@@ -44,7 +42,7 @@ describe('List Product Lambda', () => {
     const result = await handler(event);
 
     expect(result.statusCode).toBe(200);
-    expect(mockProductList).toHaveBeenCalledWith({
+    expect(mockMealList).toHaveBeenCalledWith({
       take: 10,
       skip: 5,
     });
@@ -57,11 +55,9 @@ describe('List Product Lambda', () => {
       },
     } as any;
 
-    mockProductList.mockResolvedValue([{
+    mockMealList.mockResolvedValue([{
       id: 123,
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 10.0,
+      items: [{ id: 1, quantity: 2 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     }]);
@@ -79,11 +75,9 @@ describe('List Product Lambda', () => {
       },
     } as any;
 
-    mockProductList.mockResolvedValue([{
+    mockMealList.mockResolvedValue([{
       id: 123,
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 10.0,
+      items: [{ id: 1, quantity: 2 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     }]);
@@ -99,11 +93,9 @@ describe('List Product Lambda', () => {
       queryStringParameters: undefined,
     } as any;
 
-    mockProductList.mockResolvedValue([{
+    mockMealList.mockResolvedValue([{
       id: 123,
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 10.0,
+      items: [{ id: 1, quantity: 2 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     }]);
@@ -122,7 +114,7 @@ describe('List Product Lambda', () => {
       },
     } as any;
 
-    mockProductList.mockRejectedValue(new Error('Unexpected error'));
+    mockMealList.mockRejectedValue(new Error('Unexpected error'));
 
     const result = await handler(event);
 

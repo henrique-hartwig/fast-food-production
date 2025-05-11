@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DbProductCategoryRepository } from '../../domain/database';
-import { ProductCategoryService } from '../../domain/service';
+import { DbMealRepository } from '../../domain/database';
+import { MealService } from '../../domain/service';
 import getPrismaClient from '../../../database/prisma/prismaClient';
-import { ListProductCategoriesController } from './controller';
+import { ListMealsController } from './controller';
 import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -22,11 +22,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       offset: parseInt(event.queryStringParameters?.offset)
     };
 
-    const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
-    const productCategoryService = new ProductCategoryService(productCategoryRepository);
-    const productCategoryController = new ListProductCategoriesController(productCategoryService);
+    const mealRepository = new DbMealRepository(prismaClient);
+    const mealService = new MealService(mealRepository);
+    const mealController = new ListMealsController(mealService);
 
-    const result = await productCategoryController.handle(requestData);
+    const result = await mealController.handle(requestData);
 
     return {
       statusCode: 200,
@@ -34,7 +34,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       body: JSON.stringify(result)
     };
   } catch (error: any) {
-    logger.error('Error listing product categories', error);
+    logger.error('Error listing meals', error);
 
     if (error?.name === 'ZodError') {
       return {

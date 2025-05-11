@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DbProductCategoryRepository } from '../../domain/database';
-import { ProductCategoryService } from '../../domain/service';
-import { CreateProductCategoryController } from './controller';
+import { DbMealRepository } from '../../domain/database';
+import { MealService } from '../../domain/service';
+import { CreateMealController } from './controller';
 import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -19,23 +19,23 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     const requestData = JSON.parse(event.body);
 
-    const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
-    const productCategoryService = new ProductCategoryService(productCategoryRepository);
-    const productCategoryController = new CreateProductCategoryController(productCategoryService);
+    const mealRepository = new DbMealRepository(prismaClient);
+    const mealService = new MealService(mealRepository);
+    const mealController = new CreateMealController(mealService);
 
-    const result = await productCategoryController.handle(requestData);
+    const result = await mealController.handle(requestData);
 
     return {
       statusCode: 201,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: 'Product Category created successfully',
+        message: 'Meal created successfully',
         data: result
       })
     };
 
   } catch (error: any) {
-    logger.error('Error creating product category', error);
+    logger.error('Error creating meal', error);
 
     if (error?.name === 'ZodError') {
       return {

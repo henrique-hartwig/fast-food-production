@@ -1,28 +1,28 @@
 import { z } from 'zod';
-import { ProductCategoryService } from '../../domain/service';
+import { MealService } from '../../domain/service';
 
-const GetProductCategorySchema = z.object({
+const GetMealSchema = z.object({
   id: z.number().int().positive()
 });
 
-export type GetProductCategoryRequest = z.infer<typeof GetProductCategorySchema>;
+export type GetMealRequest = z.infer<typeof GetMealSchema>;
 
-export class GetProductCategoryController {
-  constructor(private productCategoryService: ProductCategoryService) {}
+export class GetMealController {
+  constructor(private mealService: MealService) {}
 
-  async handle(request: GetProductCategoryRequest) {
+  async handle(request: GetMealRequest) {
     try {
-      const validatedData = GetProductCategorySchema.parse(request);
+      const validatedData = GetMealSchema.parse(request);
 
-      const productCategory = await this.productCategoryService.getProductCategoryById(
+      const meal = await this.mealService.getMealById(
         validatedData.id
       ) as any;
 
-      if (productCategory.error) {
-        throw Error(productCategory.error);
+      if (meal.error) {
+        throw Error(meal.error);
       }
 
-      return productCategory;
+      return meal;
     } catch (error: any) {
       throw error;
     }

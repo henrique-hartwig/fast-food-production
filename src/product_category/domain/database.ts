@@ -1,78 +1,72 @@
-import { ProductCategoryRepository } from './repository';
-import { ProductCategory } from './entity';
+import { MealRepository } from './repository';
+import { Meal } from './entity';
 import { PrismaClient } from '@prisma/client';
 
-export class DbProductCategoryRepository implements ProductCategoryRepository {
+export class DbMealRepository implements MealRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  async create(productCategory: ProductCategory): Promise<ProductCategory> {
-    const productCategoryData = await this.prisma.productCategory.create({
+  async create(meal: Meal): Promise<Meal> {
+    const mealData = await this.prisma.meal.create({
       data: {
-        name: productCategory.name,
-        description: productCategory.description,
+        items: meal.items,
       },
     });
 
-    return new ProductCategory(
-      productCategoryData.id,
-      productCategoryData.name,
-      productCategoryData.description,
+    return new Meal(
+      mealData.id,
+      mealData.items,
     );
   }
 
-  async findById(id: number): Promise<ProductCategory | null> {
-    const productCategoryData = await this.prisma.productCategory.findUnique({
+  async findById(id: number): Promise<Meal | null> {
+    const mealData = await this.prisma.meal.findUnique({
       where: { id },
     });
 
-    if (!productCategoryData) {
+    if (!mealData) {
       return null;
     }
 
-    return new ProductCategory(
-      productCategoryData.id,
-      productCategoryData.name,
-      productCategoryData.description,
+    return new Meal(
+      mealData.id,
+      mealData.items,
     );
   }
 
-  async update(productCategory: ProductCategory): Promise<ProductCategory> {
-    const productCategoryData = await this.prisma.productCategory.update({
-      where: { id: productCategory.id },
+  async update(meal: Meal): Promise<Meal> {
+    const mealData = await this.prisma.meal.update({
+      where: { id: meal.id },
       data: {
-        name: productCategory.name,
-        description: productCategory.description,
+        items: meal.items,
       },
     });
 
-    return new ProductCategory(
-      productCategoryData.id,
-      productCategoryData.name,
-      productCategoryData.description,
+    return new Meal(
+      mealData.id,
+      mealData.items,
     );
   }
 
   async delete(id: number): Promise<boolean> {
-    await this.prisma.productCategory.delete({
+    await this.prisma.meal.delete({
       where: { id },
     });
     return true;
   }
 
-  async list(limit: number, offset: number): Promise<ProductCategory[]> {
-    const productCategoriesData = await this.prisma.productCategory.findMany({
+  async list(limit: number, offset: number): Promise<Meal[]> {
+    const mealsData = await this.prisma.meal.findMany({
       skip: offset,
       take: limit,
     });
-    return productCategoriesData.map((productCategoryData: ProductCategory) => 
-      new ProductCategory(
-        productCategoryData.id,
-        productCategoryData.name,
-        productCategoryData.description,
+    return mealsData.map((mealData: Meal) => 
+      new Meal(
+        mealData.id,
+        mealData.items,
       ),
     );
   }

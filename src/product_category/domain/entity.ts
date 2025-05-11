@@ -1,7 +1,11 @@
-export class ProductCategory {
+export interface MealItem {
+  id: number;
+  quantity: number;
+}
+
+export class Meal {
   constructor(
     public id: number,
-    public name: string,
-    public description: string,
+    public items: MealItem[]
   ) {}
 }

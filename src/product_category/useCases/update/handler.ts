@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DbProductCategoryRepository } from '../../domain/database';
-import { ProductCategoryService } from '../../domain/service';
+import { DbMealRepository } from '../../domain/database';
+import { MealService } from '../../domain/service';
 import getPrismaClient from '../../../database/prisma/prismaClient';
-import { UpdateProductCategoryController } from './controller';
+import { UpdateMealController } from './controller';
 import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -13,33 +13,32 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Product category ID and body are required' })
+        body: JSON.stringify({ message: 'Meal ID and body are required' })
       };
     }
 
-    const productCategoryId = event.pathParameters?.id;
+    const mealId = event.pathParameters?.id;
     const requestData = JSON.parse(event.body);
 
-    const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
-    const productCategoryService = new ProductCategoryService(productCategoryRepository);
-    const productCategoryController = new UpdateProductCategoryController(productCategoryService);
+    const mealRepository = new DbMealRepository(prismaClient);
+    const mealService = new MealService(mealRepository);
+    const mealController = new UpdateMealController(mealService);
 
-    const result = await productCategoryController.handle({
-      id: Number(productCategoryId),
-      name: requestData.name,
-      description: requestData.description
+    const result = await mealController.handle({
+      id: Number(mealId),
+      items: requestData.items
     });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: 'Product category updated successfully',
+        message: 'Meal updated successfully',
         data: result,
       }),
     };
   } catch (error: any) {
-    logger.error('Error updating product category', error);
+    logger.error('Error updating meal', error);
 
     if (error?.name === 'ZodError') {
       return {

@@ -1,33 +1,33 @@
-import { ProductCategory } from './entity';
-import { ProductCategoryRepository } from './repository';
+import { Meal, MealItem } from './entity';
+import { MealRepository } from './repository';
 
-export class ProductCategoryService {
-  constructor(private productCategory: ProductCategoryRepository) {}
+export class MealService {
+  constructor(private meal: MealRepository) {}
 
-  async createProductCategory(name: string, description: string): Promise<ProductCategory> {
-    const productCategory = new ProductCategory(Date.now(), name, description);
-    return this.productCategory.create(productCategory);
+  async createMeal(items: MealItem[]): Promise<Meal> {
+    const meal = new Meal(Date.now(), items);
+    return this.meal.create(meal);
   }
 
-  async getProductCategoryById(id: number): Promise<ProductCategory | null> {
-    return this.productCategory.findById(id);
+  async getMealById(id: number): Promise<Meal | null> {
+    return this.meal.findById(id);
   }
 
-  async updateProductCategory(id: number, name: string, description: string): Promise<ProductCategory> {
-    const productCategory = await this.productCategory.findById(id);
-    if (!productCategory) {
-      throw new Error('Product category not found');
+  async updateMeal(id: number, items: MealItem[]): Promise<Meal> {
+    const meal = await this.meal.findById(id);
+    if (!meal) {
+      throw new Error('Meal not found');
     }
 
-    const updatedProductCategory = new ProductCategory(id, name, description);
-    return this.productCategory.update(updatedProductCategory);
+    const updatedMeal = new Meal(id, items);
+    return this.meal.update(updatedMeal);
   }
 
-  async deleteProductCategory(id: number): Promise<boolean> {
-    return this.productCategory.delete(id);
+  async deleteMeal(id: number): Promise<boolean> {
+    return this.meal.delete(id);
   }
 
-  async listProductCategories(limit: number, offset: number): Promise<ProductCategory[]> {
-    return this.productCategory.list(limit, offset);
+  async listMeals(limit: number, offset: number): Promise<Meal[]> {
+    return this.meal.list(limit, offset);
   }
 }

@@ -1,28 +1,28 @@
 import { z } from 'zod';
-import { ProductCategoryService } from '../../domain/service';
+import { MealService } from '../../domain/service';
 
-const DeleteProductCategorySchema = z.object({
+const DeleteMealSchema = z.object({
   id: z.number().int().positive()
 });
 
-export type DeleteProductCategoryRequest = z.infer<typeof DeleteProductCategorySchema>;
+export type DeleteMealRequest = z.infer<typeof DeleteMealSchema>;
 
-export class DeleteProductCategoryController {
-  constructor(private productCategoryService: ProductCategoryService) {}
+export class DeleteMealController {
+  constructor(private mealService: MealService) {}
 
-  async handle(request: DeleteProductCategoryRequest) {
+  async handle(request: DeleteMealRequest) {
     try {
-      const validatedData = DeleteProductCategorySchema.parse(request);
+      const validatedData = DeleteMealSchema.parse(request);
 
-      const productCategory = await this.productCategoryService.deleteProductCategory(
+      const meal = await this.mealService.deleteMeal(
         validatedData.id
       ) as any;
 
-      if (productCategory.error) {
-        throw Error(productCategory.error);
+      if (meal.error) {
+        throw Error(meal.error);
       }
 
-      return productCategory;
+      return meal;
     } catch (error: any) {
       throw error;
     }

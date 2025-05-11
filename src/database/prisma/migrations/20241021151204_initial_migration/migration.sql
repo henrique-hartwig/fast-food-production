@@ -1,8 +1,7 @@
 -- CreateTable
-CREATE TABLE "Order" (
+CREATE TABLE "Meal" (
     "id" TEXT NOT NULL,
-    "items" TEXT[],
-    "total" DOUBLE PRECISION NOT NULL,
+    "items" JSONB NOT NULL DEFAULT '[]'::jsonb,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

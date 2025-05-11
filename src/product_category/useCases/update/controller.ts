@@ -1,31 +1,32 @@
 import { z } from 'zod';
-import { ProductCategoryService } from '../../domain/service';
+import { MealService } from '../../domain/service';
 
-const UpdateProductCategorySchema = z.object({
+const UpdateMealSchema = z.object({
   id: z.number().int().positive(),
-  name: z.string().trim().min(1).max(100),
-  description: z.string().trim().min(5).max(500)
+  items: z.array(z.object({
+    id: z.number().int().positive(),
+    quantity: z.number().int().positive()
+  }))
 });
 
-export type UpdateProductCategoryRequest = z.infer<typeof UpdateProductCategorySchema>;
+export type UpdateMealRequest = z.infer<typeof UpdateMealSchema>;
 
-export class UpdateProductCategoryController {
-  constructor(private productCategoryService: ProductCategoryService) { }
+export class UpdateMealController {
+  constructor(private mealService: MealService) { }
 
-  async handle(request: UpdateProductCategoryRequest) {
+  async handle(request: UpdateMealRequest) {
     try {
-      const validatedData = UpdateProductCategorySchema.parse(request);
-      const productCategory = await this.productCategoryService.updateProductCategory(
+      const validatedData = UpdateMealSchema.parse(request);
+      const meal = await this.mealService.updateMeal(
         validatedData.id,
-        validatedData.name,
-        validatedData.description
+        validatedData.items
       ) as any;
 
-      if (productCategory.error) {
-        throw Error(productCategory.error);
+      if (meal.error) {
+        throw Error(meal.error);
       }
 
-      return productCategory;
+      return meal;
     } catch (error: any) {
       throw error;
     }

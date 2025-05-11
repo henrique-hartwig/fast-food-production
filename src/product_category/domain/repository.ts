@@ -1,10 +1,9 @@
-import { ProductCategory } from './entity';
+import { Meal } from './entity';
 
-export interface ProductCategoryRepository {
-  create(productCategory: ProductCategory): Promise<ProductCategory>;
-  findById(id: number): Promise<ProductCategory | null>;
-  update(productCategory: ProductCategory): Promise<ProductCategory>;
+export interface MealRepository {
+  create(meal: Meal): Promise<Meal>;
+  findById(id: number): Promise<Meal | null>;
+  update(meal: Meal): Promise<Meal>;
   delete(id: number): Promise<boolean>;
-  list(limit: number, offset: number): Promise<ProductCategory[]>;
+  list(limit: number, offset: number): Promise<Meal[]>;
 }
-

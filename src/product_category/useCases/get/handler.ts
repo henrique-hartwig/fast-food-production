@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DbProductCategoryRepository } from '../../domain/database';
-import { ProductCategoryService } from '../../domain/service';
+import { DbMealRepository } from '../../domain/database';
+import { MealService } from '../../domain/service';
 import getPrismaClient from '../../../database/prisma/prismaClient';
-import { GetProductCategoryController } from './controller';
+import { GetMealController } from './controller';
 import logger from '../../../utils/logger';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -13,28 +13,28 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Product category ID is required' })
+        body: JSON.stringify({ message: 'Meal ID is required' })
       };
     }
 
-    const productCategoryId = event.pathParameters?.id;
+    const mealId = event.pathParameters?.id;
 
-    const productCategoryRepository = new DbProductCategoryRepository(prismaClient);
-    const productCategoryService = new ProductCategoryService(productCategoryRepository);
-    const productCategoryController = new GetProductCategoryController(productCategoryService);
+    const mealRepository = new DbMealRepository(prismaClient);
+    const mealService = new MealService(mealRepository);
+    const mealController = new GetMealController(mealService);
 
-    const result = await productCategoryController.handle({ id: Number(productCategoryId) });
+    const result = await mealController.handle({ id: Number(mealId) });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: 'Product category retrieved successfully',
+        message: 'Meal retrieved successfully',
         data: result,
       }),
     };
   } catch (error: any) {
-    logger.error('Error getting product category', error);
+    logger.error('Error getting meal', error);
 
     if (error?.name === 'ZodError') {
       return {

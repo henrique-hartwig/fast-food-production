@@ -1,47 +1,18 @@
-variable "environment" {
-  description = "Deployment environment (dev, prod)"
-  type        = string
-  default     = "dev"
-}
-
-variable "api_name" {
-  description = "Name of the API Gateway"
-  type        = string
-}
-
-variable "api_description" {
-  description = "Description of the API Gateway"
-  type        = string
-}
-
-variable "tags" {
-  description = "Tags to be applied to the resources"
-  type        = map(string)
-  default     = {}
-}
-variable "product_category_lambdas" {
-  description = "Information about the product category lambda functions"
+variable "meal_lambdas" {
+  description = "Information about the meal lambda functions"
   type = map(object({
-    function_name       = string
-    arn        = string
-    invoke_arn = string
+    function_name = string
+    arn           = string
+    invoke_arn    = string
   }))
 }
 
-variable "product_lambdas" {
-  description = "Information about the product lambda functions"
-  type = map(object({
-    function_name       = string
-    arn        = string
-    invoke_arn = string
-  }))
+variable "api_gateway_id" {
+  description = "API Gateway ID"
+  type        = string
 }
 
-variable "order_lambdas" {
-  description = "Information about the order lambda functions"
-  type = map(object({
-    function_name       = string
-    arn        = string
-    invoke_arn = string
-  }))
+variable "api_gateway_arn" {
+  description = "API Gateway ARN"
+  type        = string
 }

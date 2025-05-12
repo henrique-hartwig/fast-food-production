@@ -18,44 +18,44 @@ resource "aws_security_group" "lambda_sg" {
 locals {
   lambda_functions = {
     create = {
-      name        = "create-product"
-      description = "Create a new product"
-      handler     = ".build/product/useCases/create/handler.handler"
+      name        = "create-meal"
+      description = "Create a new meal"
+      handler     = ".build/meal/useCases/create/handler.handler"
     },
     get = {
-      name        = "get-product"
-      description = "Get a product by ID"
-      handler     = ".build/product/useCases/get/handler.handler"
+      name        = "get-meal"
+      description = "Get a meal by ID"
+      handler     = ".build/meal/useCases/get/handler.handler"
     },
     list = {
-      name        = "list-product"
-      description = "List product with pagination"
-      handler     = ".build/product/useCases/list/handler.handler"
+      name        = "list-meals"
+      description = "List meals with pagination"
+      handler     = ".build/meal/useCases/list/handler.handler"
     },
     update = {
-      name        = "update-product"
-      description = "Update an existing product"
-      handler     = ".build/product/useCases/update/handler.handler"
+      name        = "update-meal"
+      description = "Update an existing meal"
+      handler     = ".build/meal/useCases/update/handler.handler"
     },
     delete = {
-      name        = "delete-product"
-      description = "Remove a product"
-      handler     = ".build/product/useCases/delete/handler.handler"
+      name        = "delete-meal"
+      description = "Remove a meal"
+      handler     = ".build/meal/useCases/delete/handler.handler"
     }
   }
 }
 
-resource "aws_lambda_function" "product_functions" {
+resource "aws_lambda_function" "meal_functions" {
   for_each = local.lambda_functions
 
-  function_name = "fast-food-orders-${each.value.name}-${var.environment}"
+  function_name = "fast-food-production-${each.value.name}-${var.environment}"
   description   = each.value.description
   role          = "arn:aws:iam::992382498858:role/LabRole"
   handler       = each.value.handler
   
-  filename         = "${path.module}/../../../../dist/product/${each.key}.zip"
-  source_code_hash = filebase64sha256("${path.module}/../../../../dist/product/${each.key}.zip")
-  
+  filename         = "${path.module}/../../../../dist/meal/${each.key}.zip"
+  source_code_hash = filebase64sha256("${path.module}/../../../../dist/meal/${each.key}.zip")
+
   layers           = var.lambda_layers
 
   runtime          = "nodejs18.x"
@@ -76,6 +76,6 @@ resource "aws_lambda_function" "product_functions" {
 
   tags = {
     Environment = var.environment
-    Service     = "product"
+    Service     = "meal"
   }
 } 

@@ -1,5 +1,5 @@
 {
-  "name": "fastfood-lambda-layer",
+  "name": "fastfood-production-lambda-layer",
   "version": "1.0.0",
   "description": "",
   "type": "module",

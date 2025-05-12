@@ -4,7 +4,7 @@ set -e
 
 mkdir -p dist
 
-for domain in order product product_category; do
+for domain in meal; do
   for usecase in $(ls .build/$domain/useCases); do
     mkdir -p dist/$domain
     zip -rq dist/$domain/$usecase.zip \

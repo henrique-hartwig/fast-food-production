@@ -1,16 +1,16 @@
-resource "aws_db_subnet_group" "subnet_group_fast_food_orders" {
-  name       = "fast-food-orders-subnet-group-${var.environment}"
+resource "aws_db_subnet_group" "subnet_group_fast_food_production" {
+  name       = "fast-food-production-subnet-group-${var.environment}"
   subnet_ids = var.subnet_ids
 
   tags = {
-    Name        = "Fast Food Orders DB Subnet Group"
+    Name        = "Fast Food Production DB Subnet Group"
     Environment = var.environment
   }
 }
 
-resource "aws_security_group" "security_group_fast_food_orders" {
-  name        = "fast-food-orders-sg-${var.environment}"
-  description = "Allow database traffic for Orders microservice"
+resource "aws_security_group" "security_group_fast_food_production" {
+  name        = "fast-food-production-sg-${var.environment}"
+  description = "Allow database traffic for Production microservice"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -28,13 +28,13 @@ resource "aws_security_group" "security_group_fast_food_orders" {
   }
 
   tags = {
-    Name        = "Fast Food Orders RDS Security Group"
+    Name        = "Fast Food Production RDS Security Group"
     Environment = var.environment
   }
 }
 
-resource "aws_db_instance" "db_fast_food_orders" {
-  identifier             = "fast-food-orders-db-${var.environment}"
+resource "aws_db_instance" "db_fast_food_production" {
+  identifier             = "fast-food-production-db-${var.environment}"
   engine                 = "postgres"
   engine_version         = "14"
   instance_class         = var.db_instance_class
@@ -45,14 +45,14 @@ resource "aws_db_instance" "db_fast_food_orders" {
   username               = var.db_username
   port                   = var.db_port
   password               = var.db_password
-  db_subnet_group_name   = aws_db_subnet_group.subnet_group_fast_food_orders.name
-  vpc_security_group_ids = [aws_security_group.security_group_fast_food_orders.id]
+  db_subnet_group_name   = aws_db_subnet_group.subnet_group_fast_food_production.name
+  vpc_security_group_ids = [aws_security_group.security_group_fast_food_production.id]
   skip_final_snapshot    = true
   deletion_protection    = var.environment == "prod" ? true : false
   backup_retention_period = var.environment == "prod" ? 14 : 7
   publicly_accessible    = true
   tags = {
-    Name        = "Fast Food Orders Database"
+    Name        = "Fast Food Production Database"
     Environment = var.environment
   }
 }

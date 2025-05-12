@@ -30,7 +30,7 @@ resource "aws_apigatewayv2_integration" "get_meal" {
 
 resource "aws_apigatewayv2_route" "get_meal" {
   api_id    = var.api_gateway_id
-  route_key = "GET /meal"
+  route_key = "GET /meal/{id}"
   target    = "integrations/${aws_apigatewayv2_integration.get_meal.id}"
 }
 
@@ -39,7 +39,7 @@ resource "aws_lambda_permission" "get_meal" {
   action        = "lambda:InvokeFunction"
   function_name = var.meal_lambdas.get.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.api_gateway_arn}/*/*/meal"
+  source_arn    = "${var.api_gateway_arn}/*/*/meal/*"
 }
 
 resource "aws_apigatewayv2_integration" "update_meal" {
@@ -52,7 +52,7 @@ resource "aws_apigatewayv2_integration" "update_meal" {
 
 resource "aws_apigatewayv2_route" "update_meal" {
   api_id    = var.api_gateway_id
-  route_key = "PUT /meal"
+  route_key = "PUT /meal/{id}"
   target    = "integrations/${aws_apigatewayv2_integration.update_meal.id}"
 }
 
@@ -61,7 +61,7 @@ resource "aws_lambda_permission" "update_meal" {
   action        = "lambda:InvokeFunction"
   function_name = var.meal_lambdas.update.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.api_gateway_arn}/*/*/meal"
+  source_arn    = "${var.api_gateway_arn}/*/*/meal/*"
 }
 
 resource "aws_apigatewayv2_integration" "delete_meal" {
@@ -74,7 +74,7 @@ resource "aws_apigatewayv2_integration" "delete_meal" {
 
 resource "aws_apigatewayv2_route" "delete_meal" {
   api_id    = var.api_gateway_id
-  route_key = "DELETE /meal"
+  route_key = "DELETE /meal/{id}"
   target    = "integrations/${aws_apigatewayv2_integration.delete_meal.id}"
 }
 
@@ -83,5 +83,5 @@ resource "aws_lambda_permission" "delete_meal" {
   action        = "lambda:InvokeFunction"
   function_name = var.meal_lambdas.delete.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.api_gateway_arn}/*/*/meal"
+  source_arn    = "${var.api_gateway_arn}/*/*/meal/*"
 }

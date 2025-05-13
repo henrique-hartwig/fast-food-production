@@ -38,21 +38,16 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
     try {
       const requestData = JSON.parse(record.body);
       const orderId = requestData.orderId;
-      console.log('orderId', orderId)
     
-      console.log('process.env.ORDERS_API_URL', process.env.ORDERS_API_URL)
       const orderResponse = await fetch(`${process.env.ORDERS_API_URL}/order/${orderId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      console.log('orderResponse', orderResponse)
     
       const orderData = await orderResponse.json() as OrderResponse;
-      console.log('orderData', orderData)
     
-      console.log('orderData.items', orderData.data.items)
       logger.info(`Processing meal from queue: ${JSON.stringify(orderData.data.items)}`);
 
       await mealController.handle(orderData.data.items.items as unknown as CreateMealRequest);
@@ -83,25 +78,20 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
 
     const requestData = JSON.parse(event.body);
     const orderId = requestData.orderId;
-    console.log('orderId', orderId)
 
-    console.log('process.env.ORDERS_API_URL', process.env.ORDERS_API_URL)
     const orderResponse = await fetch(`${process.env.ORDERS_API_URL}/order/${orderId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    console.log('orderResponse', orderResponse)
 
     const orderData = await orderResponse.json() as OrderResponse;
-    console.log('orderData', orderData);
 
     const mealRepository = new DbMealRepository(prismaClient);
     const mealService = new MealService(mealRepository);
     const mealController = new CreateMealController(mealService);
 
-    console.log('orderData.data.items', orderData.data.items)
     const result = await mealController.handle(orderData.data.items.items as unknown as CreateMealRequest);
 
     return {

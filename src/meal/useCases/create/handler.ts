@@ -33,9 +33,25 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
   for (const record of event.Records) {
     try {
       const requestData = JSON.parse(record.body);
-      logger.info(`Processing meal from queue: ${JSON.stringify(requestData)}`);
+      const orderId = requestData.orderId;
+      console.log('orderId', orderId)
+    
+      console.log('process.env.ORDERS_API_URL', process.env.ORDERS_API_URL)
+      const orderResponse = await fetch(`${process.env.ORDERS_API_URL}/order/${orderId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('orderResponse', orderResponse)
+    
+      const orderData = await orderResponse.json() as OrderResponse;
+      console.log('orderData', orderData)
+    
+      console.log('orderData.items', orderData.items)
+      logger.info(`Processing meal from queue: ${JSON.stringify(orderData.items)}`);
 
-      await mealController.handle(requestData);
+      await mealController.handle(orderData.items as unknown as CreateMealRequest);
 
       const sqsClient = new SQSClient({ region: process.env.AWS_REGION });
 

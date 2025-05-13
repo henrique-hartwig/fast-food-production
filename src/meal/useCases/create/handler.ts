@@ -7,7 +7,9 @@ import { CreateMealController, CreateMealRequest } from './controller';
 import logger from '../../../utils/logger';
 
 interface OrderResponse {
-  items: CreateMealRequest[];
+  data: {
+    items: CreateMealRequest[];
+  }
 }
 
 export const handler = async (event: SQSEvent | APIGatewayProxyEvent): Promise<any> => {
@@ -48,10 +50,10 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
       const orderData = await orderResponse.json() as OrderResponse;
       console.log('orderData', orderData)
     
-      console.log('orderData.items', orderData.items)
-      logger.info(`Processing meal from queue: ${JSON.stringify(orderData.items)}`);
+      console.log('orderData.items', orderData.data.items)
+      logger.info(`Processing meal from queue: ${JSON.stringify(orderData.data.items)}`);
 
-      await mealController.handle(orderData.items as unknown as CreateMealRequest);
+      await mealController.handle(orderData.data.items as unknown as CreateMealRequest);
 
       const sqsClient = new SQSClient({ region: process.env.AWS_REGION });
 
@@ -97,8 +99,8 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
     const mealService = new MealService(mealRepository);
     const mealController = new CreateMealController(mealService);
 
-    console.log('orderData.items', orderData.items)
-    const result = await mealController.handle(orderData.items as unknown as CreateMealRequest);
+    console.log('orderData.data.items', orderData.data.items)
+    const result = await mealController.handle(orderData.data.items as unknown as CreateMealRequest);
 
     return {
       statusCode: 201,

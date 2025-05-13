@@ -24,13 +24,22 @@ terraform {
     bucket = "fastfood-production-terraform-state"
     key    = "infra/state.tfstate"
     region = "us-east-1"
-  } 
+  }
 }
 
 data "terraform_remote_state" "fastfood_orders" {
   backend = "s3"
   config = {
     bucket = "fastfood-orders-terraform-state"
+    key    = "infra/state.tfstate"
+    region = "us-east-1"
+  }
+}
+
+data "terraform_remote_state" "fastfood_production" {
+  backend = "s3"
+  config = {
+    bucket = "fastfood-production-terraform-state"
     key    = "infra/state.tfstate"
     region = "us-east-1"
   }

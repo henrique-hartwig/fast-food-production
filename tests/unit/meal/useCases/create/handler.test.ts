@@ -1,6 +1,15 @@
+import { SQSEvent } from 'aws-lambda';
 import { handler } from '../../../../../src/meal/useCases/create/handler';
 import { PrismaClient } from '@prisma/client';
 
+jest.mock('@aws-sdk/client-sqs', () => {
+  return {
+    SQSClient: jest.fn().mockImplementation(() => ({
+      send: jest.fn().mockResolvedValue({})
+    })),
+    DeleteMessageCommand: jest.fn().mockImplementation((input) => input)
+  };
+});
 
 jest.mock('@prisma/client', () => {
   return {
@@ -10,9 +19,11 @@ jest.mock('@prisma/client', () => {
 
 describe('Create Meal Lambda', () => {
   let mockMealCreate: jest.Mock;
+  let mockSQSDelete: jest.Mock;
 
   beforeEach(() => {
     mockMealCreate = jest.fn();
+    mockSQSDelete = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
       meal: {
@@ -20,6 +31,12 @@ describe('Create Meal Lambda', () => {
       },
       $disconnect: jest.fn(),
     }));
+
+    (require('@aws-sdk/client-sqs').SQSClient as jest.Mock)
+      .mockImplementation(() => ({
+        send: mockSQSDelete,
+    }));
+    process.env.PAYMENTS_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/123456789012/test-queue';
 
     jest.clearAllMocks();
   });
@@ -47,6 +64,7 @@ describe('Create Meal Lambda', () => {
     };
 
     mockMealCreate.mockResolvedValue(fakeMeal);
+    mockSQSDelete.mockResolvedValue({});
 
     const result = await handler(event);
 
@@ -94,5 +112,32 @@ describe('Create Meal Lambda', () => {
     expect(result.statusCode).toBe(500);
     expect(JSON.parse(result.body).message).toBe('Internal server error');
     expect(mockMealCreate).toHaveBeenCalledTimes(1);
+  });
+
+
+  it('should process SQS event and create meal successfully', async () => {
+    const event = {
+      Records: [
+        {
+          messageId: 'test-message-id',
+          body: JSON.stringify({
+            items: [{ id: 1, quantity: 1 }],
+          }),
+          receiptHandle: 'test-receipt-handle',
+        }
+      ]
+    } as SQSEvent;
+
+    const fakeMeal = {
+      id: 123,
+      items: [{ id: 1, quantity: 1 }],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    mockMealCreate.mockResolvedValue(fakeMeal);
+    mockSQSDelete.mockResolvedValue({});
+
+    await handler(event);
   });
 });

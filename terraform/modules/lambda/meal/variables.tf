@@ -53,3 +53,8 @@ variable "database_url" {
   description = "Database URL"
   type        = string
 }
+
+variable "payments_queue_url" {
+  description = "Payments queue URL"
+  type        = string
+}

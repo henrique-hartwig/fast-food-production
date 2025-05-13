@@ -66,6 +66,7 @@ resource "aws_lambda_function" "meal_functions" {
     variables = {
       NODE_ENV     = var.environment
       DATABASE_URL = var.database_url
+      PAYMENTS_QUEUE_URL = var.payments_queue_url
     }
   }
 
@@ -78,4 +79,11 @@ resource "aws_lambda_function" "meal_functions" {
     Environment = var.environment
     Service     = "meal"
   }
-} 
+}
+
+resource "aws_lambda_event_source_mapping" "payment_production_queue_mapping" {
+  event_source_arn = var.payments_queue_url
+  function_name    = aws_lambda_function.meal_functions["create"].arn
+  batch_size       = 10
+  enabled          = true
+}

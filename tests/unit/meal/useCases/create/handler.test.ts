@@ -2,6 +2,22 @@ import { SQSEvent } from 'aws-lambda';
 import { handler } from '../../../../../src/meal/useCases/create/handler';
 import { PrismaClient } from '@prisma/client';
 
+jest.mock('node-fetch', () => {
+  return jest.fn().mockImplementation(() => {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({
+        items: [
+          {
+            id: 1,
+            quantity: 2
+          }
+        ]
+      })
+    });
+  });
+});
+
 jest.mock('@aws-sdk/client-sqs', () => {
   return {
     SQSClient: jest.fn().mockImplementation(() => ({

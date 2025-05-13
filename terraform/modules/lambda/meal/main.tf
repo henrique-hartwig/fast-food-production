@@ -67,6 +67,7 @@ resource "aws_lambda_function" "meal_functions" {
       NODE_ENV     = var.environment
       DATABASE_URL = var.database_url
       PAYMENTS_QUEUE_URL = var.payments_queue_url
+      ORDERS_API_URL = var.orders_api_url
     }
   }
 

@@ -63,3 +63,8 @@ variable "payments_queue_arn" {
   description = "Payments queue ARN"
   type        = string
 }
+
+variable "orders_api_url" {
+  description = "Orders API URL"
+  type        = string
+}

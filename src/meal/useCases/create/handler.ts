@@ -3,8 +3,12 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent } from 'aws-lambd
 import { DeleteMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import { DbMealRepository } from '../../domain/database';
 import { MealService } from '../../domain/service';
-import { CreateMealController } from './controller';
+import { CreateMealController, CreateMealRequest } from './controller';
 import logger from '../../../utils/logger';
+
+interface OrderResponse {
+  items: CreateMealRequest[];
+}
 
 export const handler = async (event: SQSEvent | APIGatewayProxyEvent): Promise<any> => {
   const prismaClient = new PrismaClient();
@@ -30,7 +34,7 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
     try {
       const requestData = JSON.parse(record.body);
       logger.info(`Processing meal from queue: ${JSON.stringify(requestData)}`);
-      
+
       await mealController.handle(requestData);
 
       const sqsClient = new SQSClient({ region: process.env.AWS_REGION });
@@ -39,7 +43,7 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
         QueueUrl: process.env.PAYMENTS_QUEUE_URL!,
         ReceiptHandle: record.receiptHandle
       }));
-      
+
       logger.info(`Message ${record.messageId} successfully processed and deleted from queue`);
     } catch (error) {
       logger.error(`Error processing SQS message: ${record.messageId}`, error);
@@ -58,12 +62,22 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
     }
 
     const requestData = JSON.parse(event.body);
+    const orderId = requestData.orderId;
+
+    const orderResponse = await fetch(`${process.env.ORDERS_API_URL}/order/${orderId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const orderData = await orderResponse.json() as OrderResponse;
 
     const mealRepository = new DbMealRepository(prismaClient);
     const mealService = new MealService(mealRepository);
     const mealController = new CreateMealController(mealService);
 
-    const result = await mealController.handle(requestData);
+    const result = await mealController.handle(orderData.items as unknown as CreateMealRequest);
 
     return {
       statusCode: 201,

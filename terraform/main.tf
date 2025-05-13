@@ -5,6 +5,7 @@ locals {
   api_gateway_id     = data.terraform_remote_state.fastfood_orders.outputs.api_gateway_id
   api_gateway_arn    = data.terraform_remote_state.fastfood_orders.outputs.api_gateway_execution_arn
   payments_queue_url = data.terraform_remote_state.fastfood_production.outputs.fast_food_payment_production_queue_url
+  payments_queue_arn = data.terraform_remote_state.fastfood_production.outputs.fast_food_payment_production_queue_arn
 }
 
 module "database" {
@@ -31,7 +32,7 @@ module "meal" {
   lambda_timeout     = var.lambda_timeout
   lambda_layers      = [module.lambda_layer.dependencies_layer_arn, module.lambda_layer.prisma_layer_arn]
   payments_queue_url = local.payments_queue_url
-
+  payments_queue_arn = local.payments_queue_arn
   tags = {
     Service = "Meal"
   }

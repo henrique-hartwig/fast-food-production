@@ -58,3 +58,8 @@ variable "payments_queue_url" {
   description = "Payments queue URL"
   type        = string
 }
+
+variable "payments_queue_arn" {
+  description = "Payments queue ARN"
+  type        = string
+}

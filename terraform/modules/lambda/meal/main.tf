@@ -82,7 +82,7 @@ resource "aws_lambda_function" "meal_functions" {
 }
 
 resource "aws_lambda_event_source_mapping" "payment_production_queue_mapping" {
-  event_source_arn = var.payments_queue_url
+  event_source_arn = var.payments_queue_arn
   function_name    = aws_lambda_function.meal_functions["create"].arn
   batch_size       = 10
   enabled          = true

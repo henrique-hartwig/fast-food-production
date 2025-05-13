@@ -63,20 +63,25 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
 
     const requestData = JSON.parse(event.body);
     const orderId = requestData.orderId;
+    console.log('orderId', orderId)
 
+    console.log('process.env.ORDERS_API_URL', process.env.ORDERS_API_URL)
     const orderResponse = await fetch(`${process.env.ORDERS_API_URL}/order/${orderId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
     });
+    console.log('orderResponse', orderResponse)
 
     const orderData = await orderResponse.json() as OrderResponse;
+    console.log('orderData', orderData);
 
     const mealRepository = new DbMealRepository(prismaClient);
     const mealService = new MealService(mealRepository);
     const mealController = new CreateMealController(mealService);
 
+    console.log('orderData.items', orderData.items)
     const result = await mealController.handle(orderData.items as unknown as CreateMealRequest);
 
     return {

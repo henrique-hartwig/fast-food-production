@@ -39,7 +39,7 @@ data "terraform_remote_state" "fastfood_orders" {
 data "terraform_remote_state" "fastfood_production" {
   backend = "s3"
   config = {
-    bucket = "fastfood-production-terraform-state"
+    bucket = "fastfood-payment-terraform-state"
     key    = "infra/state.tfstate"
     region = "us-east-1"
   }

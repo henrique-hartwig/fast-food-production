@@ -8,7 +8,9 @@ import logger from '../../../utils/logger';
 
 interface OrderResponse {
   data: {
-    items: CreateMealRequest[];
+    items: {
+      items: CreateMealRequest[];
+    }
   }
 }
 
@@ -53,7 +55,7 @@ async function processSQSEvent(event: SQSEvent, prismaClient: PrismaClient): Pro
       console.log('orderData.items', orderData.data.items)
       logger.info(`Processing meal from queue: ${JSON.stringify(orderData.data.items)}`);
 
-      await mealController.handle(orderData.data.items as unknown as CreateMealRequest);
+      await mealController.handle(orderData.data.items.items as unknown as CreateMealRequest);
 
       const sqsClient = new SQSClient({ region: process.env.AWS_REGION });
 
@@ -100,7 +102,7 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
     const mealController = new CreateMealController(mealService);
 
     console.log('orderData.data.items', orderData.data.items)
-    const result = await mealController.handle(orderData.data.items as unknown as CreateMealRequest);
+    const result = await mealController.handle(orderData.data.items.items as unknown as CreateMealRequest);
 
     return {
       statusCode: 201,

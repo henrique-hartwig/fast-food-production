@@ -33,13 +33,16 @@ jest.mock('@prisma/client', () => {
   };
 });
 
+
 describe('Create Meal Lambda', () => {
   let mockMealCreate: jest.Mock;
   let mockSQSDelete: jest.Mock;
+  let mockFetch: jest.Mock;
 
   beforeEach(() => {
     mockMealCreate = jest.fn();
     mockSQSDelete = jest.fn();
+    global.fetch = jest.fn();
 
     (PrismaClient as jest.Mock).mockImplementation(() => ({
       meal: {
@@ -47,18 +50,40 @@ describe('Create Meal Lambda', () => {
       },
       $disconnect: jest.fn(),
     }));
-
+    
     (require('@aws-sdk/client-sqs').SQSClient as jest.Mock)
-      .mockImplementation(() => ({
-        send: mockSQSDelete,
+    .mockImplementation(() => ({
+      send: mockSQSDelete,
     }));
+
     process.env.PAYMENTS_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/123456789012/test-queue';
+    process.env.ORDERS_API_URL = 'https://orders-api.com';
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 2 }]
+          }
+        }
+      })
+    });
 
     jest.clearAllMocks();
   });
 
   it('should return 400 if no body is sent', async () => {
     const event = { body: null } as any;
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 3 }]
+          }
+        }
+      })
+    });
     const result = await handler(event);
     expect(result.statusCode).toBe(400);
     expect(JSON.parse(result.body).message).toBe('Request body is required');
@@ -68,16 +93,27 @@ describe('Create Meal Lambda', () => {
   it('should return 201 if a valid meal is created', async () => {
     const event = {
       body: JSON.stringify({
-        items: [{ id: 1, quantity: 1 }],
+        orderId: 1,
       }),
     } as any;
 
     const fakeMeal = {
       id: 123,
-      items: [{ id: 1, quantity: 1 }],
+      items: [{ id: 1, quantity: 3 }],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 3 }]
+          }
+        }
+      })
+    });
 
     mockMealCreate.mockResolvedValue(fakeMeal);
     mockSQSDelete.mockResolvedValue({});
@@ -89,9 +125,18 @@ describe('Create Meal Lambda', () => {
     expect(body.message).toBe('Meal created successfully');
     expect(body.data).toMatchObject({
       id: 123,
-      items: [{ id: 1, quantity: 1 }],
+      items: [{ id: 1, quantity: 3 }],
     });
     expect(mockMealCreate).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${process.env.ORDERS_API_URL}/order/1`,
+      expect.objectContaining({
+        method: 'GET',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json'
+        })
+      })
+    );
   });
 
   it('should return 400 if validation error occurs', async () => {
@@ -100,6 +145,17 @@ describe('Create Meal Lambda', () => {
         items: [{ quantity: 1 }],
       }),
     } as any;
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 1 }]
+          }
+        }
+      })
+    });
 
     const zodError = new Error('Validation error');
     zodError.name = 'ZodError';
@@ -121,6 +177,17 @@ describe('Create Meal Lambda', () => {
         items: [{ id: 1, quantity: 1 }],
       }),
     } as any;
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 1 }]
+          }
+        }
+      })
+    });
 
     mockMealCreate.mockRejectedValue(new Error('DB error'));
 
@@ -153,7 +220,17 @@ describe('Create Meal Lambda', () => {
 
     mockMealCreate.mockResolvedValue(fakeMeal);
     mockSQSDelete.mockResolvedValue({});
-
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        data: {
+          items: {
+            items: [{ id: 1, quantity: 3 }]
+          }
+        }
+      })
+    });
+    
     await handler(event);
   });
 });

@@ -87,12 +87,11 @@ export const processAPIGatewayEvent = async (event: APIGatewayProxyEvent, prisma
     });
 
     const orderData = await orderResponse.json() as OrderResponse;
-
     const mealRepository = new DbMealRepository(prismaClient);
     const mealService = new MealService(mealRepository);
     const mealController = new CreateMealController(mealService);
 
-    const result = await mealController.handle(orderData.data.items.items as unknown as CreateMealRequest);
+    const result = await mealController.handle(orderData.data.items as unknown as CreateMealRequest);
 
     return {
       statusCode: 201,
